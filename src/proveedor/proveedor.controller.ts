@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, NotFoundException, Query } from '@nestjs/common';
 import { ProveedorService } from './proveedor.service';
 import { CreateProveedorDto } from './dto/create-proveedor.dto';
 import { UpdateProveedorDto } from './dto/update-proveedor.dto';
@@ -18,28 +18,35 @@ export class ProveedorController {
     });
  }
 
- // Define findAll route with @Get()
+
  @Get()
  findAll() {
     // Return all proveedores
     return this.proveedorService.getProveedores();
  }
 
- // Define findOne route with @Get(':id')
- @Get(':id')
- findOne(@Param('id') id: string) {
-    // Return proveedor with specified id
-    return this.proveedorService.getProveedor(+id);
- }
 
- // Define update route with @Patch(':id')
+ @Get('/:proveedorID')
+  async getProveedor(@Res() resizeBy, @Param('proveedorID') proveedorID){
+    const proveedor = await this.proveedorService.getProveedor(proveedorID)
+    if (!proveedor) throw new NotFoundException(' Proveedor no encontrado o inexistente');
+     return resizeBy.status(HttpStatus.OK).json(proveedor);
+  }
+
+
  @Patch(':id')
  update(@Param('id') id: string, @Body() updateProveedorDto: UpdateProveedorDto) {
     // Update proveedor with specified id and return updated proveedor
     return this.proveedorService.update(+id, updateProveedorDto);
  }
 
- // Define remove route with @Delete(':id')
- @Delete(':id')
- remove(@Param('id') id: string) {}
-};
+@Delete('/delete')
+async deleteProveedor(@Res() res, @Query ('proveedorID') proveedorID){
+   const proveedorDeleted = await this.proveedorService.deleteProveedor(proveedorID);
+   if (!proveedorDeleted) throw new NotFoundException('Producto no existe')
+   return res.status(HttpStatus.OK).json({
+      message: 'Proveedor eliminado exitosamente',
+      proveedorDeleted})
+}
+
+}
