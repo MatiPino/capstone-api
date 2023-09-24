@@ -1,6 +1,11 @@
 import { Schema } from "mongoose"
-
-export class Producto {}
+import { Document } from 'mongoose'
+import { CreateProductoDto } from "../dto/create-producto.dto"
+export class Producto {
+   static findByIdAndUpdate(productoID: any, createProductoDTO: CreateProductoDto, arg2: { new: boolean }) {
+      throw new Error('Method not implemented.')
+   }
+}
 
 export const  ProductoSchema = new Schema({
     producto_id: Number,

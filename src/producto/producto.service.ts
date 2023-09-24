@@ -7,35 +7,51 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class ProductoService {
-   async createProducto(createProductoDTO: CreateProductoDto): Promise<Producto>{
-      const producto = new this.productoModel(createProductoDTO);
-      return await producto.save()
-   } 
- constructor(@InjectModel('Producto') private readonly productoModel: Model<Producto>) {}
+  [x: string]: any;
+  constructor(@InjectModel('Producto') private readonly productoModel: Model<Producto>) { }
 
- async getProductos(): Promise<Producto[]> {
-    const producto = await this.productoModel.find();
-    return producto;
- }
+  async getProductos(): Promise<Producto[]> {
+    const productos = await this.productoModel.find();
+    return productos;
+  }
 
- async getProducto(productoID: number): Promise<Producto> {
+  async getProducto(productoID: number): Promise<Producto> {
     const producto = await this.productoModel.findById(productoID);
     return producto;
- }
-
-  async create(createProductoDto: Promise<Producto>) {
-    const producto = new this.productoModel(CreateProductoDto);
-    return await producto.save();
-     
   }
-  async update(producto_id: number, updateProductoDto: UpdateProductoDto): Promise <Producto> {
-    const updatedProducto = await this.productoModel.findByIdAndUpdate(producto_id,
-    CreateProductoDto, {new: true});
-    return updatedProducto;
+
+  async createProducto(createProductoDTO: CreateProductoDto): Promise<Producto> {
+    const producto = new this.productoModel(createProductoDTO);
+    return await producto.save()
+  }
+
+  async updateProducto(productoID: string, createProductoDto: CreateProductoDto): Promise<Producto> {
+    console.log({ productoID, createProductoDto })
+    try {
+      const updatedProducto = await this.productoModel.findByIdAndUpdate(productoID,createProductoDto, { new: true });
+
+      if (!updatedProducto) {
+        return {
+          success: false,
+          data: []
+        }
+      }
+      const res = {
+        success: true,
+        data: updatedProducto
+      }
+      console.log(res)
+      return res
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message
+      }
+    }
   }
 
   async deleteProducto(producto_id: number): Promise<Producto> {
     const deletedProducto = await this.productoModel.findByIdAndDelete(producto_id);
-   return  deletedProducto;
+    return deletedProducto;
   }
 }

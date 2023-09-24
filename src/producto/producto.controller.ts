@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, NotFoundException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, NotFoundException, Query, Put } from '@nestjs/common';
 import { ProductoService } from './producto.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { Response } from 'express';
+import mongoose from 'mongoose';
 
 @Controller('producto')
 export class ProductoController {
@@ -17,8 +18,7 @@ export class ProductoController {
        producto
      });
   }
- 
-  // Define findAll route with @Get()
+
   @Get()
   findAll() {
      // Return all productos
@@ -27,20 +27,18 @@ export class ProductoController {
  
   
   @Get('/:productoID')
-  async getProducto(@Res() resizeBy, @Param('productoID') productoID){
-    const producto = await this.productoService.getProducto(productoID)
+   getProducto(@Res() resizeBy, @Param('productoID') productoID){
+    const producto =  this.productoService.getProducto(productoID)
     if (!producto) throw new NotFoundException(' Producto no encontrado o inexistente');
      return resizeBy.status(HttpStatus.OK).json(producto);
   }
  
   
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductoDto: UpdateProductoDto) {
-     // Update producto with specified id and return updated producto
-     return this.productoService.update(+id, updateProductoDto);
+  @Put(':productoID')
+   updateProducto (@Body() createProductoDTO: CreateProductoDto, @Param('productoID') productoID){
+     return this.productoService.updateProducto(productoID, createProductoDTO)
   }
- 
- 
+
   @Delete('/delete')
   async deleteProducto(@Res() res, @Query ('productoID') productoID){
       const productoDeleted = await this.productoService.deleteProducto(productoID);
@@ -48,6 +46,6 @@ export class ProductoController {
         return res.status(HttpStatus.OK).json({
         message: 'Producto eliminado exitosamente',
         productoDeleted})
-    }
+   }
 
 }
