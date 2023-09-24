@@ -29,12 +29,30 @@ export class UsuarioService {
     return await usuario.save();
      
   }
-  async update(usuario_id: number, updateUsuarioDto: UpdateUsuarioDto): Promise <Usuario> {
-    const updatedUsuario = await this.usuarioModel.findByIdAndUpdate(usuario_id,
-    CreateUsuarioDto, {new: true});
-    return updatedUsuario;
-  }
+  async updateUsuario(usuarioID: string, createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
+    console.log({ usuarioID, createUsuarioDto })
+    try {
+      const updatedUsuario = await this.usuarioModel.findByIdAndUpdate(usuarioID,createUsuarioDto, { new: true });
 
+      if (!updatedUsuario) {
+        return {
+          success: false,
+          data: []
+        }
+      }
+      const res = {
+        success: true,
+        data: updatedUsuario
+      }
+      console.log(res)
+      return res
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message
+      }
+    }
+  }
   async deleteUsuario(usuario_id: number): Promise<Usuario> {
     const deletedUsuario = await this.usuarioModel.findByIdAndDelete(usuario_id);
    return  deletedUsuario;

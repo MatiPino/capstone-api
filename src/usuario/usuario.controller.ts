@@ -1,5 +1,5 @@
 // Import necessary modules
-import { Controller, Get, Post, Param, Body, Patch, Delete, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Patch, Delete, Res, HttpStatus, Put } from '@nestjs/common';
 import { Response } from 'express';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -37,13 +37,12 @@ export class UsuarioController {
  }
 
  // Define update route with @Patch(':id')
- @Patch(':id')
- update(@Param('id') id: string, @Body() updateUsuarioDto: UpdateUsuarioDto) {
-    // Update usuario with specified id and return updated usuario
-    return this.usuarioService.update(+id, updateUsuarioDto);
+ @Put(':usuarioID')
+ updateUsuario (@Body() createUsuarioDTO: CreateUsuarioDto, @Param('usuarioID') usuarioID){
+   return this.usuarioService.updateUsuario(usuarioID, createUsuarioDTO)
  }
 
  // Define remove route with @Delete(':id')
- @Delete(':id')
+ @Delete(':usuarioID')
  remove(@Param('id') id: string) {}
 };

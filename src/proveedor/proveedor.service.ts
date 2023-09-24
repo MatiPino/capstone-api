@@ -27,10 +27,29 @@ export class ProveedorService {
     return await proveedor.save();
      
   }
-  async update(proveedor_id: number, updateProveedorDto: UpdateProveedorDto): Promise <Proveedor> {
-    const updatedProveedor = await this.proveedorModel.findByIdAndUpdate(proveedor_id,
-    CreateProveedorDto, {new: true});
-    return updatedProveedor;
+  async updateProveedor(proveedorID: string, createProveedorDto: CreateProveedorDto): Promise<Proveedor> {
+    console.log({ proveedorID, createProveedorDto })
+    try {
+      const updatedProveedor = await this.proveedorModel.findByIdAndUpdate(proveedorID,createProveedorDto, { new: true });
+
+      if (!updatedProveedor) {
+        return {
+          success: false,
+          data: []
+        }
+      }
+      const res = {
+        success: true,
+        data: updatedProveedor
+      }
+      console.log(res)
+      return res
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message
+      }
+    }
   }
 
   async deleteProveedor(proveedor_id: number): Promise<Proveedor> {
