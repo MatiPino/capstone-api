@@ -1,5 +1,5 @@
 // Import necessary modules
-import { Controller, Get, Post, Param, Body, Patch, Delete, Res, HttpStatus, Put } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Patch, Delete, Res, HttpStatus, Put, Query, NotFoundException } from '@nestjs/common';
 import { Response } from 'express';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -43,6 +43,12 @@ export class UsuarioController {
  }
 
  // Define remove route with @Delete(':id')
- @Delete(':usuarioID')
- remove(@Param('id') id: string) {}
+ @Delete('/delete')
+ async deleteUsuario(@Res() res, @Query ('usuarioID') usuarioID){
+    const usuarioDeleted = await this.usuarioService.deleteUsuario(usuarioID);
+    if (!usuarioDeleted) throw new NotFoundException('Usuario no existe')
+    return res.status(HttpStatus.OK).json({
+       message: 'Usuario eliminado exitosamente',
+       usuarioDeleted})
+}
 };

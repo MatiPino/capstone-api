@@ -6,6 +6,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 @Injectable()
 export class RolService {
+  getRol(rolID: any) {
+    throw new Error('Method not implemented.');
+  }
   constructor(@InjectModel('Rol') private readonly rolModel: Model<Rol>) { }
   
   
@@ -14,9 +17,10 @@ export class RolService {
     return await rol.save()
   }
 
-  findAll() {
-    return `This action returns all rol`;
-  }
+  async getRoles(): Promise<Rol[]> {
+    const rol = await this.rolModel.find();
+    return rol;
+ }
 
   findOne(id: number) {
     return `This action returns a #${id} rol`;

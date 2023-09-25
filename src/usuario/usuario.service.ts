@@ -53,8 +53,8 @@ export class UsuarioService {
       }
     }
   }
-  async deleteUsuario(usuario_id: number): Promise<Usuario> {
-    const deletedUsuario = await this.usuarioModel.findByIdAndDelete(usuario_id);
+  async deleteUsuario(usuarioID: number): Promise<Usuario> {
+    const deletedUsuario = await this.usuarioModel.findByIdAndDelete(usuarioID);
    return  deletedUsuario;
   }
 }
