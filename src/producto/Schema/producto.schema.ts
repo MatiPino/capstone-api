@@ -1,4 +1,4 @@
-import { Schema } from "mongoose"
+import mongoose, { Schema } from "mongoose"
 import { Document } from 'mongoose'
 import { CreateProductoDto } from "../dto/create-producto.dto"
 export class Producto {
@@ -12,6 +12,6 @@ export const  ProductoSchema = new Schema({
     nombre: { type: String, required: true },
     precio: { type: Number, required: true },
     codigo_barra: { type: Number, required: true },
-    proveedor_id: String
+    proveedor_id: { type: Schema.ObjectId, ref: "proveedor" }
 
 })
