@@ -4,10 +4,10 @@ import { UpdateProductoDto } from './dto/update-producto.dto';
 import { Producto } from './Schema/producto.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 @Injectable()
 export class ProductoService {
-  [x: string]: any;
   constructor(@InjectModel('Producto') private readonly productoModel: Model<Producto>) { }
 
   async getProductos(): Promise<Producto[]> {

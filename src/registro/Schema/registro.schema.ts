@@ -7,6 +7,8 @@ export const  RegistroSchema = new Schema({
     productos: String,
     total: { type: Number, required: true},
     type:  Boolean,
-    date: Date
-
+    createdAt:{
+        type: Date,
+        default: Date.now
+    }
 })

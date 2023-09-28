@@ -1,5 +1,8 @@
+import { Prop } from "@nestjs/mongoose";
+
 export class CreateProductoDto {
-    nombre: string
-    precio: number
-    codigo_barra: number
+    @Prop({ required: true })
+    nombre: string;
+    precio: number;
+    codigo_barra: number;
 }

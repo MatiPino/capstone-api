@@ -1,6 +1,9 @@
 import { Schema } from 'mongoose'
 import { Document } from 'mongoose'
-export class Usuario {}
+export class Usuario {
+   success: any
+   data: any
+}
 
 
 export const  UsuarioSchema = new Schema({

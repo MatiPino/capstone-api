@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { Usuario } from './Schema/usuario.schema';
 
 // Decorate class with @Controller('usuario')
 @Controller('usuario')
@@ -40,7 +41,7 @@ export class UsuarioController {
  @Put(':usuarioID')
  updateUsuario (@Body() createUsuarioDTO: CreateUsuarioDto, @Param('usuarioID') usuarioID){
    return this.usuarioService.updateUsuario(usuarioID, createUsuarioDTO)
- }
+}
 
  // Define remove route with @Delete(':id')
  @Delete('/delete')
