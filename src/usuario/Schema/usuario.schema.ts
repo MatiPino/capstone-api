@@ -1,16 +1,11 @@
-import { Schema } from 'mongoose'
-import { Document } from 'mongoose'
-export class Usuario {
-   success: any
-   data: any
-}
+import { Schema } from "mongoose";
+import { Document } from "mongoose";
 
-
-export const  UsuarioSchema = new Schema({
-    nombre: { type: String, required: true },
-    apellido: String,
-    rol: { type: String, required: true},
-    contrasena:{ type: String, required: true},
-    autentificacion_id: { type: Schema.ObjectId, ref: "autentificacion" }
-
-})
+export const UsuarioSchema = new Schema({
+  nombre: { type: String, required: true },
+  apellido: String,
+  rol: { type: String, required: true },
+  // contrasena:{ type: String, required: true},
+  autentificacion_id: { type: Schema.ObjectId, ref: "Autenticacion" },
+  date_added: { type: Date, default: Date.now },
+});
