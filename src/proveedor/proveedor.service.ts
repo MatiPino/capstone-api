@@ -12,7 +12,7 @@ export class ProveedorService {
    } 
  constructor(@InjectModel('Proveedor') private readonly proveedorModel: Model<Proveedor>) {}
 
- async getProveedores(): Promise<Proveedor[]> {
+ async findAll(): Promise<Proveedor[]> {
     const proveedor = await this.proveedorModel.find();
     return proveedor;
  }

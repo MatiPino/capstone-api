@@ -17,15 +17,34 @@ export class RolService {
     return await rol.save()
   }
 
-  async getRoles(): Promise<Rol[]> {
+  async findAll() {
+    try {
     const rol = await this.rolModel.find();
-    return rol;
- }
-
-  findOne(id: number) {
-    return `This action returns a #${id} rol`;
+    return {
+      success: true,
+      data: rol,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      data: error.message,
+    };
   }
-
+}
+  async findOne(id: string) {
+    try{
+      const rol = await this.rolModel.findById(id).populate("rol_id")
+    return {
+      success: true,
+      data: rol,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      data: error.message,
+    };
+  }
+}
   update(id: number, updateRolDto: UpdateRolDto) {
     return `This action updates a #${id} rol`;
   }

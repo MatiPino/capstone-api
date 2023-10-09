@@ -19,15 +19,13 @@ export class RolController {
   }
   @Get()
   findAll() {
-    // Return all roles
-    return this.rolService.getRoles();
+    return this.rolService.findAll();
  }
 
-  @Get('/:rolID')
-   getRol(@Res() resizeBy, @Param('rolID') rolID){
-    const rol =  this.rolService.getRol(rolID)
-     return resizeBy.status(HttpStatus.OK).json(rol);
-  }
+ @Get(":id")
+ findOne(@Param("id") id: string) {
+   return this.rolService.findOne(id);
+ }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRolDto: UpdateRolDto) {
