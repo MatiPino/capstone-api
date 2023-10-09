@@ -1,60 +1,102 @@
-
-import { Injectable } from '@nestjs/common';
-import { CreateUsuarioDto } from './dto/create-usuario.dto';
-import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { Usuario } from './Schema/usuario.schema';
+import { Injectable } from "@nestjs/common";
+import { CreateUsuarioDto } from "./dto/create-usuario.dto";
+import { UpdateUsuarioDto } from "./dto/update-usuario.dto";
+import { Model } from "mongoose";
+import { InjectModel } from "@nestjs/mongoose";
+import { Usuario } from "./interfaces/usuario.interface";
+import { Autenticacion } from "src/autenticacion/interfaces/autenticacion.interface";
 
 @Injectable()
 export class UsuarioService {
-   async createUsuario(createUsuarioDTO: CreateUsuarioDto): Promise<Usuario>{
-      const usuario = new this.usuarioModel(createUsuarioDTO);
-      return await usuario.save()
-   }
- constructor(@InjectModel('Usuario') private readonly usuarioModel: Model<Usuario>) {}
+  constructor(
+    @InjectModel("Usuario") private readonly usuarioModel: Model<Usuario>,
+    @InjectModel("Autenticacion") private readonly autenticacionModel: Model<Autenticacion>
+  ) {}
 
- async getUsuarios(): Promise<Usuario[]> {
-    const usuario = await this.usuarioModel.find();
-    return usuario;
- }
+  async createUsuario(createUsuarioDTO: CreateUsuarioDto): Promise<Usuario> {
+    const usuario = new this.usuarioModel(createUsuarioDTO);
+    return await usuario.save();
+  }
 
- async getUsuario(usuarioID: number): Promise<Usuario> {
+  async crear(createUsuarioDto: any) {
+    try {
+      const autenticacion = new this.autenticacionModel({ rut: createUsuarioDto.rut, contrasena: createUsuarioDto.contrasena });
+
+      const usuario = new this.usuarioModel({
+        nombre: createUsuarioDto.nombre,
+        apellido: createUsuarioDto.apellido,
+        rol: createUsuarioDto.rol,
+        autentificacion_id: autenticacion._id,
+      });
+      autenticacion.usuario_id = usuario._id;
+      usuario.autentificacion_id = autenticacion._id;
+
+      await autenticacion.save();
+      await usuario.save();
+
+      console.log({ usuario, autenticacion });
+      return {
+        success: true,
+        data: usuario,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
+  async getUsuarios() {
+    try {
+      const usuarios = await this.usuarioModel.find().populate("autentificacion_id");
+      return {
+        success: true,
+        data: usuarios,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
+  async getUsuario(usuarioID: number): Promise<Usuario> {
     const usuario = await this.usuarioModel.findById(usuarioID);
     return usuario;
- }
+  }
 
   async create(createUsuarioDto: Promise<Usuario>) {
     const usuario = new this.usuarioModel(CreateUsuarioDto);
     return await usuario.save();
-     
   }
-  async updateUsuario(usuarioID: string, createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
-    console.log({ usuarioID, createUsuarioDto })
+  async updateUsuario(usuarioID: string, createUsuarioDto: CreateUsuarioDto) {
+    console.log({ usuarioID, createUsuarioDto });
     try {
-      const updatedUsuario = await this.usuarioModel.findByIdAndUpdate(usuarioID,createUsuarioDto, { new: true });
+      const updatedUsuario = await this.usuarioModel.findByIdAndUpdate(usuarioID, createUsuarioDto, { new: true });
 
       if (!updatedUsuario) {
         return {
           success: false,
-          data: []
-        }
+          data: [],
+        };
       }
       const res = {
         success: true,
-        data: updatedUsuario
-      }
-      console.log(res)
-      return res
+        data: updatedUsuario,
+      };
+      console.log(res);
+      return res;
     } catch (error) {
       return {
         success: false,
-        data: error.message
-      }
+        data: error.message,
+      };
     }
   }
   async deleteUsuario(usuarioID: number): Promise<Usuario> {
     const deletedUsuario = await this.usuarioModel.findByIdAndDelete(usuarioID);
-   return  deletedUsuario;
+    return deletedUsuario;
   }
 }

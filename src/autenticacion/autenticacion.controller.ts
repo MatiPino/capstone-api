@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AutenticacionService } from './autenticacion.service';
-import { CreateAutenticacionDto } from './dto/create-autenticacion.dto';
-import { UpdateAutenticacionDto } from './dto/update-autenticacion.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { AutenticacionService } from "./autenticacion.service";
+import { CreateAutenticacionDto } from "./dto/create-autenticacion.dto";
+import { UpdateAutenticacionDto } from "./dto/update-autenticacion.dto";
 
-@Controller('autenticacion')
+@Controller("autenticacion")
 export class AutenticacionController {
   constructor(private readonly autenticacionService: AutenticacionService) {}
 
@@ -12,23 +12,27 @@ export class AutenticacionController {
     return this.autenticacionService.create(createAutenticacionDto);
   }
 
+  @Post("login")
+  login(@Body() credenciales: CreateAutenticacionDto) {
+    return this.autenticacionService.login(credenciales);
+  }
   @Get()
   findAll() {
     return this.autenticacionService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.autenticacionService.findOne(+id);
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.autenticacionService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAutenticacionDto: UpdateAutenticacionDto) {
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() updateAutenticacionDto: UpdateAutenticacionDto) {
     return this.autenticacionService.update(+id, updateAutenticacionDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.autenticacionService.remove(+id);
   }
 }
