@@ -21,16 +21,13 @@ export class ProductoController {
 
   @Get()
   findAll() {
-     // Return all productos
-     return this.productoService.getProductos();
+    return this.productoService.findAll();
   }
  
   
-  @Get('/:productoID')
-   getProducto(@Res() resizeBy, @Param('productoID') productoID){
-    const producto =  this.productoService.getProducto(productoID)
-    if (!producto) throw new NotFoundException(' Producto no encontrado o inexistente');
-     return resizeBy.status(HttpStatus.OK).json(producto);
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.productoService.findOne(id);
   }
  
   
@@ -39,13 +36,9 @@ export class ProductoController {
      return this.productoService.updateProducto(productoID, createProductoDTO)
   }
 
-  @Delete('/delete')
-  async deleteProducto(@Res() res, @Query ('productoID') productoID){
-      const productoDeleted = await this.productoService.deleteProducto(productoID);
-      if (!productoDeleted) throw new NotFoundException('Producto no existe')
-        return res.status(HttpStatus.OK).json({
-        message: 'Producto eliminado exitosamente',
-        productoDeleted})
-   }
+  @Delete(":id")
+  remove(@Param("id") id: string) {
+    return this.productoService.remove(+id);
+  }
 
 }
