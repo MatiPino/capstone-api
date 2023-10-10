@@ -10,14 +10,33 @@ import { Document } from 'mongoose';
 export class ProductoService {
   constructor(@InjectModel('Producto') private readonly productoModel: Model<Producto>) { }
 
-  async getProductos(): Promise<Producto[]> {
-    const productos = await this.productoModel.find();
-    return productos;
+  async findAll() {
+    try {
+      const producto = await this.productoModel.find();
+      return {
+        success: true,
+        data: producto,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
   }
-
-  async getProducto(productoID: string): Promise<Producto> {
-    const producto = await this.productoModel.findById(productoID);
-    return producto;
+  async findOne(id: string) {
+    try {
+      const autenticacion = await this.productoModel.findById(id);
+      return {
+        success: true,
+        data: autenticacion,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
   }
 
   async createProducto(createProductoDTO: CreateProductoDto): Promise<Producto> {
@@ -50,8 +69,7 @@ export class ProductoService {
     }
   }
 
-  async deleteProducto(producto_id: number): Promise<Producto> {
-    const deletedProducto = await this.productoModel.findByIdAndDelete(producto_id);
-    return deletedProducto;
+  remove(id: number) {
+    return `This action removes a #${id} autenticacion`;
   }
 }

@@ -3,11 +3,11 @@ import { ProveedorService } from './proveedor.service';
 import { CreateProveedorDto } from './dto/create-proveedor.dto';
 import { UpdateProveedorDto } from './dto/update-proveedor.dto';
 import { Response } from 'express';
+
 @Controller('proveedor')
 export class ProveedorController {
   constructor(private readonly proveedorService: ProveedorService) {}
 
- // Define createPost route with @Post('/create')
  @Post('/create')
  async createPost(@Res() res: Response, @Body() createProveedorDto: CreateProveedorDto){
     // Create new proveedor and return response
@@ -21,8 +21,7 @@ export class ProveedorController {
 
  @Get()
  findAll() {
-    // Return all proveedores
-    return this.proveedorService.getProveedores();
+    return this.proveedorService.findAll();
  }
 
 

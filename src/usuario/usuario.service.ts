@@ -47,9 +47,9 @@ export class UsuarioService {
     }
   }
 
-  async getUsuarios() {
+  async findAll() {
     try {
-      const usuarios = await this.usuarioModel.find().populate("autentificacion_id");
+      const usuarios = await this.usuarioModel.find();
       return {
         success: true,
         data: usuarios,
@@ -95,8 +95,7 @@ export class UsuarioService {
       };
     }
   }
-  async deleteUsuario(usuarioID: number): Promise<Usuario> {
-    const deletedUsuario = await this.usuarioModel.findByIdAndDelete(usuarioID);
-    return deletedUsuario;
+  remove(id: number) {
+    return `This action removes a #${id} usuario`;
   }
 }
