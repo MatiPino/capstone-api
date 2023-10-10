@@ -40,7 +40,7 @@ export class AutenticacionService {
           data: [],
         };
       }
-
+      console.log(usuario);
       const payload = {
         sub: usuario._id,
         rut: usuario.usuario_id.rut,
@@ -49,6 +49,7 @@ export class AutenticacionService {
         email: usuario.usuario_id.email,
         rol: usuario.usuario_id.rol,
       };
+      console.log(payload);
       const token = await this.jwtService.sign(payload, { secret: jwtConstants.secret });
       return {
         success: true,
