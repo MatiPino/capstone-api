@@ -6,8 +6,7 @@ export const UsuarioSchema = new Schema({
   apellido: String,
   rol: { type: String, required: true },
   imagen: String,
-  contrasena:{ type: String, required: true, bcrypt: true},
+  contrasena:{ type: String, required: true},
   autentificacion_id: { type: Schema.ObjectId, ref: "Autenticacion" },
   date_added: { type: Date, default: Date.now },
 });
-UsuarioSchema.plugin(require('mongoose-bcrypt'))
