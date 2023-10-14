@@ -19,6 +19,7 @@ export class UsuarioService {
   }
 
   async crear(createUsuarioDto: any) {
+    console.log(createUsuarioDto);
     try {
       const autenticacion = new this.autenticacionModel({ rut: createUsuarioDto.rut, contrasena: createUsuarioDto.contrasena });
 
@@ -26,6 +27,7 @@ export class UsuarioService {
         nombre: createUsuarioDto.nombre,
         apellido: createUsuarioDto.apellido,
         rol: createUsuarioDto.rol,
+        imagen: createUsuarioDto.imagen,
         autentificacion_id: autenticacion._id,
       });
       autenticacion.usuario_id = usuario._id;

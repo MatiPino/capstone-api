@@ -43,7 +43,7 @@ export class AutenticacionService {
       console.log(usuario);
       const payload = {
         sub: usuario._id,
-        rut: usuario.usuario_id.rut,
+        rut: usuario.rut,
         nombre: usuario.usuario_id.nombre,
         apellido: usuario.usuario_id.apellido,
         email: usuario.usuario_id.email,

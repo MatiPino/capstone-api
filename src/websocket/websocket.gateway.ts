@@ -2,7 +2,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketGatew
 import { WebsocketService } from "./websocket.service";
 import { Socket } from "socket.io";
 
-@WebSocketGateway({ cors: "*" })
+@WebSocketGateway(81, { cors: "*" })
 export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly websocketService: WebsocketService) {}
   afterInit(server: any) {
