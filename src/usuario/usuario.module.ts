@@ -3,7 +3,7 @@ import { UsuarioService } from "./usuario.service";
 import { UsuarioController } from "./usuario.controller";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UsuarioSchema } from "./Schema/usuario.schema";
-import { AutenticacionSchema } from "src/autenticacion/entities/autenticacion.schema";
+import { AutenticacionSchema } from "src/autenticacion/Schema/autenticacion.schema";
 @Module({
   imports: [
     MongooseModule.forFeature([
