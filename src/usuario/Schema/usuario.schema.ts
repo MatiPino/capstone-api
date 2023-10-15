@@ -8,5 +8,6 @@ export const UsuarioSchema = new Schema({
   imagen: { type: String, required: true },
   correo: { type: String, required: true },
   autentificacion: { type: Schema.ObjectId, ref: "Autenticacion" },
+  comercio: { type: Schema.ObjectId, ref: "Comercio", required: false },
   date_added: { type: Date, default: Date.now },
 });

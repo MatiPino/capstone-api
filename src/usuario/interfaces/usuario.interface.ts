@@ -3,5 +3,6 @@ export interface Usuario extends Document {
   readonly nombre: String;
   readonly apellido: String;
   readonly rol: String;
-  autentificacion: String;
+  autentificacion?: any;
+  comercio: any;
 }

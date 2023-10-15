@@ -19,7 +19,7 @@ export class ComercioController {
 
   @Get(":id")
   findOne(@Param("id") id: string) {
-    return this.comercioService.findOne(+id);
+    return this.comercioService.findOne(id);
   }
 
   @Patch(":id")
