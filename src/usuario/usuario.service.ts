@@ -5,12 +5,14 @@ import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Usuario } from "./interfaces/usuario.interface";
 import { Autenticacion } from "src/autenticacion/interfaces/autenticacion.interface";
+import { Rol } from "src/rol/interfaces/rol.interface";
 
 @Injectable()
 export class UsuarioService {
   constructor(
     @InjectModel("Usuario") private readonly usuarioModel: Model<Usuario>,
-    @InjectModel("Autenticacion") private readonly autenticacionModel: Model<Autenticacion>
+    @InjectModel("Autenticacion") private readonly autenticacionModel: Model<Autenticacion>,
+    @InjectModel("Rol") private readonly rolModel: Model<Rol>
   ) {}
 
   async createUsuario(createUsuarioDTO: CreateUsuarioDto): Promise<Usuario> {
@@ -18,30 +20,50 @@ export class UsuarioService {
     return await usuario.save();
   }
 
-  async crear(createUsuarioDto: any) {
-    console.log(createUsuarioDto);
+  async crear(body: any) {
     try {
-      const autenticacion = new this.autenticacionModel({ rut: createUsuarioDto.rut, contrasena: createUsuarioDto.contrasena });
+      const existeAut = await this.autenticacionModel.findOne({ rut: body.rut }).exec();
+      console.log(existeAut);
+      const rol = await this.rolModel.findOne({ rol: body.rol }).exec();
 
+      // Verifica si el rut ya existe
+      if (existeAut) {
+        return {
+          success: false,
+          data: "Este Rut ya existe",
+        };
+      }
+
+      const autenticacion = new this.autenticacionModel({ rut: body.rut, contrasena: body.contrasena });
       const usuario = new this.usuarioModel({
-        nombre: createUsuarioDto.nombre,
-        apellido: createUsuarioDto.apellido,
-        rol: createUsuarioDto.rol,
-        imagen: createUsuarioDto.imagen,
+        nombre: body.nombre,
+        apellido: body.apellido,
+        rol: rol._id,
+        correo: body.correo,
+        imagen: body.imagen,
         autentificacion_id: autenticacion._id,
       });
-      autenticacion.usuario_id = usuario._id;
-      usuario.autentificacion_id = autenticacion._id;
 
+      autenticacion.usuario = usuario._id;
+      usuario.autentificacion = autenticacion._id;
       await autenticacion.save();
       await usuario.save();
+      await this.rolModel.findByIdAndUpdate(rol._id, { $push: { usuarios: usuario._id } });
 
-      console.log({ usuario, autenticacion });
       return {
         success: true,
         data: usuario,
       };
     } catch (error) {
+      const { code, errors } = error;
+      console.log(code);
+      if (code === 11000) {
+        return {
+          success: false,
+          data: { error: "Este campo ya existe", value: error.keyValue },
+        };
+      }
+
       return {
         success: false,
         data: error.message,
@@ -51,7 +73,7 @@ export class UsuarioService {
 
   async findAll() {
     try {
-      const usuarios = await this.usuarioModel.find();
+      const usuarios = await this.usuarioModel.find().populate("rol", "-usuarios");
       return {
         success: true,
         data: usuarios,

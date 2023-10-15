@@ -17,8 +17,8 @@ export class UsuarioController {
     });
   }
   @Post()
-  create(@Body() createUsuarioDto: any) {
-    return this.usuarioService.crear(createUsuarioDto);
+  create(@Body() body: any) {
+    return this.usuarioService.crear(body);
   }
 
   // Define findAll route with @Get()
@@ -40,5 +40,5 @@ export class UsuarioController {
   @Delete("/:id")
   remove(@Param("id") id: string) {
     return this.usuarioService.remove(+id);
-    }
+  }
 }

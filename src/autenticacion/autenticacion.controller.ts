@@ -16,6 +16,10 @@ export class AutenticacionController {
   login(@Body() credenciales: CreateAutenticacionDto) {
     return this.autenticacionService.login(credenciales);
   }
+  @Post("registrar")
+  registrar(@Body() body: any) {
+    return this.autenticacionService.crear(body);
+  }
   @Get()
   findAll() {
     return this.autenticacionService.findAll();

@@ -1,3 +1,3 @@
 export class CreateRolDto {
-        rol: string
+  rol: string;
 }
