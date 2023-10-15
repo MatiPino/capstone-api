@@ -5,5 +5,7 @@ export interface Producto extends Document {
   precio: number;
   codigo_barra: string;
   proveedor?: string;
+  imagenes?: string[];
+  comercio: string;
   createdAt: Date;
 }

@@ -5,6 +5,7 @@ export interface Comercio extends Document {
   direccion: string;
   telefono: string;
   propietario: any;
+  comercio: string;
   productos: string[];
   registros: string[];
 }

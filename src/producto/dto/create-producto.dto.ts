@@ -1,8 +1,17 @@
-import { Prop } from "@nestjs/mongoose";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateProductoDto {
-    @Prop({ required: true })
-    nombre: string;
-    precio: number;
-    codigo_barra: number;
+  @IsString()
+  nombre: string;
+  @IsNumber()
+  precio: number;
+  @IsString()
+  codigo_barra: string;
+
+  @IsOptional()
+  imagenes: string[];
+  @IsOptional()
+  proveedor: string;
+  @IsString()
+  comercio: string;
 }
