@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { CreateComercioDto } from './dto/create-comercio.dto';
-import { UpdateComercioDto } from './dto/update-comercio.dto';
+import { Injectable } from "@nestjs/common";
+import { CreateComercioDto } from "./dto/create-comercio.dto";
+import { UpdateComercioDto } from "./dto/update-comercio.dto";
 
 @Injectable()
 export class ComercioService {
   create(createComercioDto: CreateComercioDto) {
-    return 'This action adds a new comercio';
+    return "This action adds a new comercio";
   }
 
   findAll() {
