@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProductoDto } from './dto/create-producto.dto';
-import { UpdateProductoDto } from './dto/update-producto.dto';
-import { Producto } from './Schema/producto.schema';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Injectable } from "@nestjs/common";
+import { CreateProductoDto } from "./dto/create-producto.dto";
+import { UpdateProductoDto } from "./dto/update-producto.dto";
+import { Model } from "mongoose";
+import { InjectModel } from "@nestjs/mongoose";
+import { Document } from "mongoose";
+import { Producto } from "./interfaces/producto.interface";
 
 @Injectable()
 export class ProductoService {
-  constructor(@InjectModel('Producto') private readonly productoModel: Model<Producto>) { }
+  constructor(@InjectModel("Producto") private readonly productoModel: Model<Producto>) {}
 
   async findAll() {
     try {
@@ -41,31 +41,31 @@ export class ProductoService {
 
   async createProducto(createProductoDTO: CreateProductoDto): Promise<Producto> {
     const producto = new this.productoModel(createProductoDTO);
-    return await producto.save()
+    return await producto.save();
   }
 
-  async updateProducto(productoID: string, createProductoDto: CreateProductoDto): Promise<Producto> {
-    console.log({ productoID, createProductoDto })
+  async updateProducto(productoID: string, createProductoDto: CreateProductoDto) {
+    console.log({ productoID, createProductoDto });
     try {
-      const updatedProducto = await this.productoModel.findByIdAndUpdate(productoID,createProductoDto, { new: true });
+      const updatedProducto = await this.productoModel.findByIdAndUpdate(productoID, createProductoDto, { new: true });
 
       if (!updatedProducto) {
         return {
           success: false,
-          data: []
-        }
+          data: [],
+        };
       }
       const res = {
         success: true,
-        data: updatedProducto
-      }
-      console.log(res)
-      return res
+        data: updatedProducto,
+      };
+      console.log(res);
+      return res;
     } catch (error) {
       return {
         success: false,
-        data: error.message
-      }
+        data: error.message,
+      };
     }
   }
 
