@@ -17,10 +17,10 @@ import { RolSchema } from "src/rol/Schema/rol.schema";
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: "120s" },
+      signOptions: { expiresIn: "12h" },
     }),
   ],
   controllers: [AutenticacionController],
-  providers: [AutenticacionService, JwtService],
+  providers: [AutenticacionService],
 })
 export class AutenticacionModule {}

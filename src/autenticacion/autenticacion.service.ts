@@ -51,7 +51,6 @@ export class AutenticacionService {
       // const { contrasena } = usuario;
 
       const checkContrasena = await bcrypt.compare(contrasena, usuario.contrasena);
-      console.log(checkContrasena);
       if (!checkContrasena) {
         return {
           success: false,
@@ -60,17 +59,40 @@ export class AutenticacionService {
       }
 
       const payload = {
-        sub: usuario._id,
+        id: usuario._id,
         rut: usuario.rut,
         nombre: usuario.usuario.nombre,
         apellido: usuario.usuario.apellido,
         email: usuario.usuario.email,
         rol: usuario.usuario.rol,
       };
-      const token = await this.jwtService.sign(payload, { secret: jwtConstants.secret });
+      const token = await this.jwtService.sign(payload);
+      console.log(token);
       return {
         success: true,
-        data: token,
+        data: { ...payload, token },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
+  async verificarToken(token: string) {
+    try {
+      const payload = this.jwtService.verify(token);
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (payload.exp <= currentTime) {
+        return {
+          success: false,
+          data: "Token expirado",
+        };
+      }
+      return {
+        success: true,
+        data: payload,
       };
     } catch (error) {
       return {

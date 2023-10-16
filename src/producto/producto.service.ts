@@ -108,6 +108,11 @@ export class ProductoService {
     }
   }
 
+  async update(id: string, updateProductoDto: UpdateProductoDto) {
+    try {
+    } catch (error) {}
+  }
+
   remove(id: number) {
     return `This action removes a #${id} autenticacion`;
   }

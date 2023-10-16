@@ -20,6 +20,12 @@ export class AutenticacionController {
   registrar(@Body() body: any) {
     return this.autenticacionService.crear(body);
   }
+  @Post("verificarToken")
+  verificarToken(@Body() body: any) {
+    const { token } = body;
+    console.log(token);
+    return this.autenticacionService.verificarToken(token);
+  }
   @Get()
   findAll() {
     return this.autenticacionService.findAll();
