@@ -10,6 +10,7 @@ import { jwtConstants } from "./constants";
 import * as bcrypt from "bcrypt";
 import { Usuario } from "src/usuario/interfaces/usuario.interface";
 import { Rol } from "src/rol/interfaces/rol.interface";
+import { Comercio } from "src/comercio/interfaces/comercio.interface";
 
 @Injectable()
 export class AutenticacionService {
@@ -18,6 +19,7 @@ export class AutenticacionService {
   constructor(
     @InjectModel("Usuario") private readonly usuarioModel: Model<Usuario>,
     @InjectModel("Autenticacion") private readonly autenticacionModel: Model<Autenticacion>,
+    @InjectModel("Comercio") private readonly comercioModel: Model<Comercio>,
     @InjectModel("Rol") private readonly rolModel: Model<Rol>,
     private jwtService: JwtService
   ) {}
@@ -42,6 +44,8 @@ export class AutenticacionService {
   async login({ rut, contrasena }) {
     try {
       const usuario = await this.autenticacionModel.findOne({ rut: rut }).populate("usuario");
+      console.log(usuario.usuario._id);
+      const comercio = await this.comercioModel.findById(usuario.usuario.comercio);
       if (!usuario) {
         return {
           success: false,
@@ -59,15 +63,17 @@ export class AutenticacionService {
       }
 
       const payload = {
-        id: usuario._id,
+        id: usuario.usuario._id,
         rut: usuario.rut,
         nombre: usuario.usuario.nombre,
         apellido: usuario.usuario.apellido,
-        email: usuario.usuario.email,
+        correo: usuario.usuario.correo,
+        direccion: comercio.direccion,
+        telefono: comercio.telefono,
+        comercio: comercio._id,
         rol: usuario.usuario.rol,
       };
       const token = await this.jwtService.sign(payload);
-      console.log(token);
       return {
         success: true,
         data: { ...payload, token },

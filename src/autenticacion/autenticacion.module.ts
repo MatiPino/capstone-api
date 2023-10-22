@@ -7,11 +7,13 @@ import { jwtConstants } from "./constants";
 import { AutenticacionSchema } from "./Schema/autenticacion.schema";
 import { UsuarioSchema } from "src/usuario/Schema/usuario.schema";
 import { RolSchema } from "src/rol/Schema/rol.schema";
+import { ComercioSchema } from "src/comercio/schema/comercio.schema";
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: "Autenticacion", schema: AutenticacionSchema },
       { name: "Usuario", schema: UsuarioSchema },
+      { name: "Comercio", schema: ComercioSchema },
       { name: "Rol", schema: RolSchema },
     ]),
     JwtModule.register({

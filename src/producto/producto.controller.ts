@@ -10,7 +10,7 @@ export class ProductoController {
   create(@Body() createProductoDto: CreateProductoDto, @Req() req: Request) {
     console.log(req.headers);
     const { authorization } = req.headers;
-    
+
     return this.productoService.create(createProductoDto);
   }
 
@@ -23,6 +23,10 @@ export class ProductoController {
     return this.productoService.findAllByComercio(id);
   }
 
+  @Get(":id/:idComercio")
+  findOneByComercio(@Param("id") id: string, @Param("idComercio") idComercio: string) {
+    return this.productoService.findOneByComercio(id, idComercio);
+  }
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.productoService.findOne(id);

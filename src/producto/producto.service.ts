@@ -44,12 +44,28 @@ export class ProductoService {
     }
   }
 
-  async findOne(id: string) {
+  async findOneByComercio(id: string, comercio: string) {
     try {
-      const autenticacion = await this.productoModel.findById(id);
+      const producto = await this.productoModel.findById(id).where({ comercio });
+      console.log(producto);
       return {
         success: true,
-        data: autenticacion,
+        data: producto,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+  async findOne(id: string) {
+    try {
+      const producto = await this.productoModel.findOne({ codigo_barra: id });
+      console.log(producto);
+      return {
+        success: true,
+        data: producto,
       };
     } catch (error) {
       return {

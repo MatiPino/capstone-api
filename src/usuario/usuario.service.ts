@@ -86,6 +86,22 @@ export class UsuarioService {
     }
   }
 
+  async buscarImagen(id: string) {
+    console.log(id);
+    try {
+      const usuario = await this.usuarioModel.findById(id).select("imagen");
+      return {
+        success: true,
+        data: usuario,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
   async getUsuario(usuarioID: number): Promise<Usuario> {
     const usuario = await this.usuarioModel.findById(usuarioID);
     return usuario;

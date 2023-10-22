@@ -32,6 +32,12 @@ export class UsuarioController {
     return this.usuarioService.getUsuario(+id);
   }
 
+  @Get("img/:id")
+  buscarImagen(@Param("id") id: string) {
+    console.log(id);
+    return this.usuarioService.buscarImagen(id);
+  }
+
   @Put(":usuarioID")
   updateUsuario(@Body() createUsuarioDTO: CreateUsuarioDto, @Param("usuarioID") usuarioID) {
     return this.usuarioService.updateUsuario(usuarioID, createUsuarioDTO);
