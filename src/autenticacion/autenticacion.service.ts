@@ -70,9 +70,9 @@ export class AutenticacionService {
         nombre: usuario.usuario.nombre,
         apellido: usuario.usuario.apellido,
         correo: usuario.usuario.correo,
-        direccion: comercio.direccion,
-        telefono: comercio.telefono,
-        comercio: comercio._id,
+        direccion: comercio.direccion || null,
+        telefono: comercio.telefono || null,
+        comercio: comercio._id || null,
         rol: rol.rol,
       };
       const token = await this.jwtService.sign(payload);
