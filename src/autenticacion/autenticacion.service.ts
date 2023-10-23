@@ -64,17 +64,29 @@ export class AutenticacionService {
         };
       }
 
-      const payload = {
-        id: usuario.usuario._id,
-        rut: usuario.rut,
-        nombre: usuario.usuario.nombre,
-        apellido: usuario.usuario.apellido,
-        correo: usuario.usuario.correo,
-        direccion: comercio.direccion || null,
-        telefono: comercio.telefono || null,
-        comercio: comercio._id || null,
-        rol: rol.rol,
-      };
+      let payload = {};
+      if (rol.rol == "cliente") {
+        payload = {
+          id: usuario.usuario._id,
+          rut: usuario.rut,
+          nombre: usuario.usuario.nombre,
+          apellido: usuario.usuario.apellido,
+          correo: usuario.usuario.correo,
+          direccion: comercio.direccion || null,
+          telefono: comercio.telefono || null,
+          comercio: comercio._id || null,
+          rol: rol.rol,
+        };
+      } else {
+        payload = {
+          id: usuario.usuario._id,
+          rut: usuario.rut,
+          nombre: usuario.usuario.nombre,
+          apellido: usuario.usuario.apellido,
+          correo: usuario.usuario.correo,
+          rol: rol.rol,
+        };
+      }
       const token = await this.jwtService.sign(payload);
       return {
         success: true,
