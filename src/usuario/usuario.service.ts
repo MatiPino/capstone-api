@@ -102,9 +102,14 @@ export class UsuarioService {
     }
   }
 
-  async getUsuario(usuarioID: number): Promise<Usuario> {
-    const usuario = await this.usuarioModel.findById(usuarioID);
-    return usuario;
+  async getUsuario(usuarioID: string) {
+    try {
+      const usuario = await this.usuarioModel.findById(usuarioID).populate("rol", "-usuarios");
+      console.log(usuario);
+      return { success: true, data: usuario };
+    } catch (error) {
+      return { success: false, data: error.message };
+    }
   }
 
   async create(createUsuarioDto: Promise<Usuario>) {

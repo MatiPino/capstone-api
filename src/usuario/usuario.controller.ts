@@ -29,7 +29,7 @@ export class UsuarioController {
 
   @Get(":id")
   findOne(@Param("id") id: string) {
-    return this.usuarioService.getUsuario(+id);
+    return this.usuarioService.getUsuario(id);
   }
 
   @Get("img/:id")

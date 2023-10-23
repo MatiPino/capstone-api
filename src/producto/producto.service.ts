@@ -31,7 +31,6 @@ export class ProductoService {
   async findAllByComercio(id: string) {
     try {
       const producto = await this.productoModel.find({ comercio: id }).populate("comercio", "nombre _id").exec();
-      console.log(producto);
       return {
         success: true,
         data: producto,

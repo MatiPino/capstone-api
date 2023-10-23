@@ -2,9 +2,13 @@ import { Controller, Get, Post, Body, Param, Delete, Put, Patch, Req } from "@ne
 import { ProductoService } from "./producto.service";
 import { CreateProductoDto } from "./dto/create-producto.dto";
 import { Request } from "express";
+import { JwtService } from "@nestjs/jwt";
 @Controller("producto")
 export class ProductoController {
-  constructor(private readonly productoService: ProductoService) {}
+  constructor(
+    private readonly productoService: ProductoService,
+    private jwtService: JwtService
+  ) {}
 
   @Post()
   create(@Body() createProductoDto: CreateProductoDto, @Req() req: Request) {
@@ -23,9 +27,11 @@ export class ProductoController {
   findAll() {
     return this.productoService.findAll();
   }
-  @Get("comercio/:id")
-  findAllByComercio(@Param("id") id: string) {
-    return this.productoService.findAllByComercio(id);
+  @Get("comercio")
+  findAllByComercio(@Req() req: Request) {
+    const { authorization } = req.headers;
+    const { comercio }: any = this.jwtService.decode(authorization.split(" ")[1]);
+    return this.productoService.findAllByComercio(comercio);
   }
 
   @Get(":id/:idComercio")

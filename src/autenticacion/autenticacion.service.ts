@@ -43,9 +43,11 @@ export class AutenticacionService {
   }
   async login({ rut, contrasena }) {
     try {
-      const usuario = await this.autenticacionModel.findOne({ rut: rut }).populate("usuario");
+      const usuario = await this.autenticacionModel.findOne({ rut: rut }).populate(["usuario"]);
       console.log(usuario.usuario._id);
+      const rol = await this.rolModel.findById(usuario.usuario.rol);
       const comercio = await this.comercioModel.findById(usuario.usuario.comercio);
+      console.log(usuario);
       if (!usuario) {
         return {
           success: false,
@@ -71,7 +73,7 @@ export class AutenticacionService {
         direccion: comercio.direccion,
         telefono: comercio.telefono,
         comercio: comercio._id,
-        rol: usuario.usuario.rol,
+        rol: rol.rol,
       };
       const token = await this.jwtService.sign(payload);
       return {
