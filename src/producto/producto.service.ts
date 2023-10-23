@@ -99,6 +99,30 @@ export class ProductoService {
     }
   }
 
+  async crear(createProductoDTO: CreateProductoDto) {
+    const { codigo_barra, comercio, nombre, precio, proveedor, imagenes } = createProductoDTO;
+    try {
+      const producto = new this.productoModel({
+        nombre,
+        precio,
+        codigo_barra,
+        comercio,
+        imagenes
+      });
+      const data = await producto.save();
+      await this.comercioModel.findByIdAndUpdate(comercio, { $push: { productos: data._id } });
+      return {
+        success: true,
+        data: data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
   async updateProducto(productoID: string, createProductoDto: CreateProductoDto) {
     console.log({ productoID, createProductoDto });
     try {

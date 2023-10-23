@@ -14,6 +14,11 @@ export class ProductoController {
     return this.productoService.create(createProductoDto);
   }
 
+  @Post("agregarProducto")
+  crear(@Body() createProductoDto: CreateProductoDto) {
+    return this.productoService.crear(createProductoDto);
+  }
+
   @Get()
   findAll() {
     return this.productoService.findAll();
