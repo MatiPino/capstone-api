@@ -17,8 +17,8 @@ export class RolController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.rolService.findOne(id);
+  findOne(@Param("id") rol: string) {
+    return this.rolService.todosRol(rol);
   }
 
   @Patch(":id")

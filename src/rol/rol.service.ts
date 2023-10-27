@@ -4,9 +4,11 @@ import { UpdateRolDto } from "./dto/update-rol.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Rol } from "./interfaces/rol.interface";
+import { Autenticacion } from "src/autenticacion/interfaces/autenticacion.interface";
 @Injectable()
 export class RolService {
-  constructor(@InjectModel("Rol") private readonly rolModel: Model<Rol>) {}
+  constructor(@InjectModel("Rol") private readonly rolModel: Model<Rol>,
+  @InjectModel("Autenticacion") private readonly autenticacionModel: Model<Autenticacion>) {}
 
   getRol(rolID: any) {
     throw new Error("Method not implemented.");
@@ -55,6 +57,29 @@ export class RolService {
       return {
         success: true,
         data: rol,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+  async todosRol(rol: string) {
+    try {
+      const rolEncontrado = await this.rolModel.findOne({ rol:rol }).populate("usuarios", "-imagen");
+      const usuarios = rolEncontrado.usuarios
+      console.log(usuarios);
+      const data = usuarios.map((usuario) => {
+        // const rut = 
+        return {
+          ...usuario._doc,
+          rol: rolEncontrado.rol,
+        };
+      });
+      return {
+        success: true,
+        data: data,
       };
     } catch (error) {
       return {

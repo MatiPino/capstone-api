@@ -8,14 +8,6 @@ import { CreateUsuarioDto } from "./dto/create-usuario.dto";
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 
-  @Post("/create")
-  async createPost(@Res() res: Response, @Body() createUsuarioDto: CreateUsuarioDto) {
-    const usuario = await this.usuarioService.createUsuario(createUsuarioDto);
-    return res.status(HttpStatus.OK).json({
-      message: "Usuario creado",
-      usuario: usuario,
-    });
-  }
   @Post()
   create(@Body() body: any) {
     return this.usuarioService.crear(body);
