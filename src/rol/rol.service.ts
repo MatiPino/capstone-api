@@ -7,8 +7,10 @@ import { Rol } from "./interfaces/rol.interface";
 import { Autenticacion } from "src/autenticacion/interfaces/autenticacion.interface";
 @Injectable()
 export class RolService {
-  constructor(@InjectModel("Rol") private readonly rolModel: Model<Rol>,
-  @InjectModel("Autenticacion") private readonly autenticacionModel: Model<Autenticacion>) {}
+  constructor(
+    @InjectModel("Rol") private readonly rolModel: Model<Rol>,
+    @InjectModel("Autenticacion") private readonly autenticacionModel: Model<Autenticacion>
+  ) {}
 
   getRol(rolID: any) {
     throw new Error("Method not implemented.");
@@ -67,16 +69,18 @@ export class RolService {
   }
   async todosRol(rol: string) {
     try {
-      const rolEncontrado = await this.rolModel.findOne({ rol:rol }).populate("usuarios", "-imagen");
-      const usuarios = rolEncontrado.usuarios
-      console.log(usuarios);
-      const data = usuarios.map((usuario) => {
-        // const rut = 
+      const rolEncontrado = await this.rolModel.findOne({ rol: rol }).populate("usuarios", "-imagen");
+      const usuarios = rolEncontrado.usuarios;
+      const dataPromises = usuarios.map(async (usuario) => {
+        const rut = await this.autenticacionModel.findById(usuario.autentificacion).select("rut");
         return {
           ...usuario._doc,
           rol: rolEncontrado.rol,
+          rut: rut.rut,
         };
       });
+      const data = await Promise.all(dataPromises);
+      console.log(data);
       return {
         success: true,
         data: data,
