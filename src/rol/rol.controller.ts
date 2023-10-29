@@ -3,9 +3,12 @@ import { RolService } from "./rol.service";
 import { CreateRolDto } from "./dto/create-rol.dto";
 import { UpdateRolDto } from "./dto/update-rol.dto";
 import { JwtAuthGuard } from "src/autenticacion/guards/auth.guard";
+import { Rol } from "src/.decorators/roles.decorator";
+import { Rol as RolEnum } from "src/.enums/rol.enum";
+import RolGuard from "src/guards/rol.guard";
 
 @Controller("rol")
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolGuard)
 export class RolController {
   constructor(private readonly rolService: RolService) {}
 
@@ -14,6 +17,7 @@ export class RolController {
     return this.rolService.createRol(createRolDto);
   }
   @Get()
+  @Rol(RolEnum.ADMIN, RolEnum.CLIENTE)
   findAll() {
     return this.rolService.findAll();
   }
