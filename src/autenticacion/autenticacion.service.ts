@@ -11,7 +11,7 @@ import * as bcrypt from "bcrypt";
 import { Usuario } from "src/usuario/interfaces/usuario.interface";
 import { Rol } from "src/rol/interfaces/rol.interface";
 import { Comercio } from "src/comercio/interfaces/comercio.interface";
-
+import { Payload } from "src/.interfaces/payload.interface";
 @Injectable()
 export class AutenticacionService {
   salOrRounds: number | string = 10;
@@ -64,7 +64,7 @@ export class AutenticacionService {
         };
       }
 
-      let payload = {};
+      let payload: Payload;
       if (rol.rol == "cliente") {
         payload = {
           id: usuario.usuario._id,

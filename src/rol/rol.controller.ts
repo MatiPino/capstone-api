@@ -1,9 +1,11 @@
-import { Controller, Res, Get, Post, Body, Patch, Param, Delete, HttpStatus, NotFoundException } from "@nestjs/common";
+import { Controller, Res, Get, Post, Body, Patch, Param, Delete, HttpStatus, NotFoundException, UseGuards } from "@nestjs/common";
 import { RolService } from "./rol.service";
 import { CreateRolDto } from "./dto/create-rol.dto";
 import { UpdateRolDto } from "./dto/update-rol.dto";
+import { JwtAuthGuard } from "src/autenticacion/guards/auth.guard";
 
 @Controller("rol")
+@UseGuards(JwtAuthGuard)
 export class RolController {
   constructor(private readonly rolService: RolService) {}
 

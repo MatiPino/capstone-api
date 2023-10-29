@@ -8,6 +8,7 @@ import { AutenticacionSchema } from "./Schema/autenticacion.schema";
 import { UsuarioSchema } from "src/usuario/Schema/usuario.schema";
 import { RolSchema } from "src/rol/Schema/rol.schema";
 import { ComercioSchema } from "src/comercio/schema/comercio.schema";
+import { JwtStrategy } from "./strategy/jwt.strategy";
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -23,6 +24,6 @@ import { ComercioSchema } from "src/comercio/schema/comercio.schema";
     }),
   ],
   controllers: [AutenticacionController],
-  providers: [AutenticacionService],
+  providers: [AutenticacionService, JwtStrategy],
 })
 export class AutenticacionModule {}

@@ -6,12 +6,16 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { Producto } from "./interfaces/producto.interface";
 import { Comercio } from "src/comercio/interfaces/comercio.interface";
+import { JwtService } from "@nestjs/jwt";
+import { Request } from "express";
+import { Payload } from "src/.interfaces/payload.interface";
 
 @Injectable()
 export class ProductoService {
   constructor(
     @InjectModel("Producto") private readonly productoModel: Model<Producto>,
-    @InjectModel("Comercio") private readonly comercioModel: Model<Comercio>
+    @InjectModel("Comercio") private readonly comercioModel: Model<Comercio>,
+    private jwtService: JwtService
   ) {}
 
   async findAll() {
@@ -28,9 +32,20 @@ export class ProductoService {
       };
     }
   }
-  async findAllByComercio(id: string) {
+  async findAllByComercio(req: Request) {
     try {
-      const producto = await this.productoModel.find({ comercio: id }).populate("comercio", "nombre _id").exec();
+      const { authorization } = req.headers;
+      console.log(authorization);
+      const decodedToken = this.jwtService.decode(authorization.split(" ")[1]);
+      if (typeof decodedToken === "string") {
+        return {
+          success: false,
+          data: [],
+        };
+      }
+      const { comercio }: any = decodedToken;
+
+      const producto = await this.productoModel.find({ comercio: comercio }).populate("comercio", "nombre _id").exec();
       return {
         success: true,
         data: producto,
@@ -106,7 +121,7 @@ export class ProductoService {
         precio,
         codigo_barra,
         comercio,
-        imagenes
+        imagenes,
       });
       const data = await producto.save();
       await this.comercioModel.findByIdAndUpdate(comercio, { $push: { productos: data._id } });

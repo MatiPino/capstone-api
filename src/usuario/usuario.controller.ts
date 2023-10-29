@@ -1,10 +1,12 @@
 // Import necessary modules
-import { Controller, Get, Post, Param, Body, Patch, Delete, Res, HttpStatus, Put, Query, NotFoundException } from "@nestjs/common";
+import { Controller, Get, Post, Param, Body, Patch, Delete, Res, HttpStatus, Put, Query, NotFoundException, UseGuards } from "@nestjs/common";
 import { Response } from "express";
 import { UsuarioService } from "./usuario.service";
 import { CreateUsuarioDto } from "./dto/create-usuario.dto";
+import { JwtAuthGuard } from "src/autenticacion/guards/auth.guard";
 
 @Controller("usuario")
+@UseGuards(JwtAuthGuard)
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 
