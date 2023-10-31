@@ -10,6 +10,7 @@ import { ComercioModule } from "./comercio/comercio.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { RolModule } from "./rol/rol.module";
 import { WebsocketModule } from "./websocket/websocket.module";
+import { PublicacionModule } from './publicacion/publicacion.module';
 @Module({
   imports: [
     MongooseModule.forRoot("mongodb+srv://anperkins:oegPUpEmKBdeJqGg@cluster0.qz6sj4p.mongodb.net/capstone"),
@@ -21,6 +22,7 @@ import { WebsocketModule } from "./websocket/websocket.module";
     ComercioModule,
     RolModule,
     WebsocketModule,
+    PublicacionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
