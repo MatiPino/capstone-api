@@ -44,10 +44,8 @@ export class AutenticacionService {
   async login({ rut, contrasena }) {
     try {
       const usuario = await this.autenticacionModel.findOne({ rut: rut }).populate(["usuario"]);
-      console.log(usuario.usuario._id);
       const rol = await this.rolModel.findById(usuario.usuario.rol);
       const comercio = await this.comercioModel.findById(usuario.usuario.comercio);
-      console.log(usuario);
       if (!usuario) {
         return {
           success: false,
