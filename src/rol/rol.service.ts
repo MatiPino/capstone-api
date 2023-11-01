@@ -73,6 +73,8 @@ export class RolService {
       const usuarios = rolEncontrado.usuarios;
       const dataPromises = usuarios.map(async (usuario) => {
         const rut = await this.autenticacionModel.findById(usuario.autentificacion).select("rut");
+        console.log({rut, usuario});
+        
         return {
           ...usuario._doc,
           rol: rolEncontrado.rol,
@@ -80,7 +82,6 @@ export class RolService {
         };
       });
       const data = await Promise.all(dataPromises);
-      console.log(data);
       return {
         success: true,
         data: data,

@@ -33,7 +33,7 @@ export class UsuarioService {
           data: "Este Rut ya existe",
         };
       }
-
+      
       const autenticacion = new this.autenticacionModel({ rut: body.rut, contrasena: body.contrasena });
       const usuario = new this.usuarioModel({
         nombre: body.nombre,
