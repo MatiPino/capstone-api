@@ -1,48 +1,21 @@
 import { Injectable } from "@nestjs/common";
 import { CreateProveedorDto } from "./dto/create-proveedor.dto";
-import { UpdateProveedorDto } from "./dto/update-proveedor.dto";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Proveedor } from "./interfaces/proveedor.interface";
 @Injectable()
 export class ProveedorService {
-  async createProveedor(createProveedorDTO: CreateProveedorDto): Promise<Proveedor> {
-    const proveedor = new this.proveedorModel(createProveedorDTO);
-    return await proveedor.save();
-  }
-  constructor(@InjectModel("Proveedor") private readonly proveedorModel: Model<Proveedor>) {}
+  constructor(
+    @InjectModel("Proveedor") private readonly proveedorModel: Model<Proveedor>
+    ) {}
 
-  async findAll(): Promise<Proveedor[]> {
-    const proveedor = await this.proveedorModel.find();
-    return proveedor;
-  }
-
-  async getProveedor(proveedorID: number): Promise<Proveedor> {
-    const proveedor = await this.proveedorModel.findById(proveedorID);
-    return proveedor;
-  }
-
-  async create(createProveedorDto: Promise<Proveedor>) {
-    const proveedor = new this.proveedorModel(CreateProveedorDto);
-    return await proveedor.save();
-  }
-  async updateProveedor(proveedorID: string, createProveedorDto: CreateProveedorDto) {
-    console.log({ proveedorID, createProveedorDto });
+  async findAll() {
     try {
-      const updatedProveedor = await this.proveedorModel.findByIdAndUpdate(proveedorID, createProveedorDto, { new: true });
-
-      if (!updatedProveedor) {
-        return {
-          success: false,
-          data: [],
-        };
-      }
-      const res = {
+      const proveedor = await this.proveedorModel.find();
+      return {
         success: true,
-        data: updatedProveedor,
+        data: proveedor,
       };
-      console.log(res);
-      return res;
     } catch (error) {
       return {
         success: false,
@@ -51,8 +24,34 @@ export class ProveedorService {
     }
   }
 
-  async deleteProveedor(proveedor_id: number): Promise<Proveedor> {
-    const deletedProveedor = await this.proveedorModel.findByIdAndDelete(proveedor_id);
-    return deletedProveedor;
+  async crear(CreateProveedorDto: CreateProveedorDto) {
+    const { nombre, telefono, descripcion, correo } = CreateProveedorDto;
+    try {
+      const proveedor = new this.proveedorModel({
+        nombre,
+        telefono,
+        descripcion,
+        correo,
+      });
+      const data = await proveedor.save();
+      return {
+        success: true,
+        data: data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
+  async update(id: string, updateProveedorDto: CreateProveedorDto) {
+    try {     
+    } catch (error) {}
+  }
+
+  remove (id: string) {
+    return `This action removes a #${id} proveedor`;
   }
 }
