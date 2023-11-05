@@ -24,7 +24,7 @@ export default class RolGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException({
         success: false,
-        message: "Usuario no autorizado",
+        data: "Usuario no autorizado",
       });
     }
 
@@ -32,7 +32,7 @@ export default class RolGuard implements CanActivate {
     if (typeof tokenData == "string") {
       throw new UnauthorizedException({
         success: false,
-        message: "Usuario no autorizado",
+        data: "Usuario no autorizado",
       });
     }
 
@@ -40,7 +40,7 @@ export default class RolGuard implements CanActivate {
     if (!rolPermitido) {
       throw new UnauthorizedException({
         success: false,
-        message: "Usuario no autorizado",
+        data: "Usuario no autorizado",
       });
     }
     return rolPermitido;

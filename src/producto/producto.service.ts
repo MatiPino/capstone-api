@@ -58,10 +58,17 @@ export class ProductoService {
     }
   }
 
-  async findOneByComercio(id: string, comercio: string) {
+  async findOneByComercio(codigo_barra: string, comercio: string) {
+    console.log({ codigo_barra, comercio });
     try {
-      const producto = await this.productoModel.findById(id).where({ comercio });
-      console.log(producto);
+      const producto = await this.productoModel.findOne({ codigo_barra, comercio }).select("-imagenes");
+      console.log({ producto });
+      if (!producto) {
+        return {
+          success: false,
+          data: [],
+        };
+      }
       return {
         success: true,
         data: producto,
@@ -74,9 +81,9 @@ export class ProductoService {
     }
   }
   async findOne(id: string) {
+    console.log(typeof id);
     try {
       const producto = await this.productoModel.findOne({ codigo_barra: id });
-      console.log(producto);
       return {
         success: true,
         data: producto,

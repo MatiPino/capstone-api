@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from "@nestjs/common";
 import { AutenticacionService } from "./autenticacion.service";
 import { CreateAutenticacionDto } from "./dto/create-autenticacion.dto";
 import { UpdateAutenticacionDto } from "./dto/update-autenticacion.dto";
 import { JwtAuthGuard } from "./guards/auth.guard";
+import { Request } from "express";
 
 @Controller("autenticacion")
 export class AutenticacionController {
@@ -15,7 +16,9 @@ export class AutenticacionController {
   }
 
   @Post("login") // NO poner useGuard a login, porque no tiene token para validar
-  login(@Body() credenciales: CreateAutenticacionDto) {
+  login(@Body() credenciales: CreateAutenticacionDto, @Req() req: Request) {
+    const { headers } = req;
+    console.log(credenciales);
     return this.autenticacionService.login(credenciales);
   }
   @Post("registrar")

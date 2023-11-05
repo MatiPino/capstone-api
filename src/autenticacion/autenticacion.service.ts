@@ -42,6 +42,7 @@ export class AutenticacionService {
     }
   }
   async login({ rut, contrasena }) {
+    console.log({ rut, contrasena });
     try {
       const usuario = await this.autenticacionModel.findOne({ rut: rut }).populate(["usuario"]);
       const rol = await this.rolModel.findById(usuario.usuario.rol);

@@ -8,7 +8,7 @@ export const ProductoSchema = new Schema({
   codigo_barra: { type: String, required: true },
   proveedor: { type: Schema.ObjectId, ref: "Proveedor", required: false },
   comercio: { type: Schema.ObjectId, ref: "Comercio", required: true },
-  createdAt: {
+  fecha: {
     type: Date,
     default: Date.now,
   },

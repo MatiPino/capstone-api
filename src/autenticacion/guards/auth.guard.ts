@@ -17,7 +17,7 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
         err ||
         new UnauthorizedException({
           success: false,
-          message: "Usuario no autorizado",
+          data: "Usuario no autorizado",
         })
       );
     }

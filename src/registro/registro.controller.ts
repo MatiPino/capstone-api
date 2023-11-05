@@ -10,14 +10,9 @@ import { JwtAuthGuard } from "src/autenticacion/guards/auth.guard";
 export class RegistroController {
   constructor(private readonly registroService: RegistroService) {}
 
-  @Post("/create")
-  async createPost(@Res() res: Response, @Body() createRegistroDto: CreateRegistroDto) {
-    // Create new registro and return response
-    const registro = await this.registroService.createRegistro(createRegistroDto);
-    return res.status(HttpStatus.OK).json({
-      message: "Registro creado",
-      registro: registro,
-    });
+  @Post()
+  create(@Body() createRegistroDto: CreateRegistroDto) {
+    return this.registroService.create(createRegistroDto);
   }
 
   // Define findAll route with @Get()
