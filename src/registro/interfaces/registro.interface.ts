@@ -4,4 +4,5 @@ export interface Registro extends Document {
   readonly total: number;
   readonly tipo: boolean;
   readonly comercio: string;
+  readonly createdAt: Date;
 }

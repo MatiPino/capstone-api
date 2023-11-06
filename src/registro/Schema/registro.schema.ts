@@ -9,6 +9,11 @@ export const RegistroSchema = new Schema({
   comercio: { type: Schema.ObjectId, ref: "Comercio", required: true },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: function () {
+      const currentDate = new Date();
+      // Restar un mes a la fecha actual
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      return currentDate;
+    },
   },
 });

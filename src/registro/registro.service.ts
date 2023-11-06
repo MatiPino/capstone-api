@@ -3,6 +3,7 @@ import { CreateRegistroDto } from "./dto/create-registro.dto";
 import { UpdateRegistroDto } from "./dto/update-registro.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Registro } from "./Schema/registro.schema";
+// import { Registro } from "./interfaces/registro.interface";
 import { Model } from "mongoose";
 import { Comercio } from "src/comercio/interfaces/comercio.interface";
 import { Producto } from "src/producto/interfaces/producto.interface";
@@ -15,14 +16,144 @@ export class RegistroService {
     @InjectModel("Producto") private readonly productoModel: Model<Producto>
   ) {}
 
-  async getRegistros(): Promise<Registro[]> {
-    const registro = await this.registroModel.find();
-    return registro;
+  async getRegistros() {
+    try {
+      const registro = await this.registroModel.find();
+      return {
+        success: true,
+        data: registro,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
   }
 
-  async getRegistro(registroID: number): Promise<Registro> {
-    const registro = await this.registroModel.findById(registroID);
-    return registro;
+  async productoVendidoMes() {
+    const primerDia = new Date();
+    primerDia.setDate(1);
+    try {
+      const registros = await this.registroModel.aggregate([
+        { $match: { createdAt: { $gte: primerDia, $lte: new Date() } } },
+        {
+          $unwind: "$productos",
+        },
+        {
+          $group: {
+            _id: "$productos.id",
+            nombre: { $first: "$productos.nombre" },
+            cantidadVendida: { $sum: "$productos.cantidad" },
+          },
+        },
+        {
+          $sort: { cantidadVendida: -1 },
+        },
+      ]);
+      return {
+        success: true,
+        data: registros,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
+  async productoVendidoAnioConMes() {
+    const primerDiaDelAnio = new Date(new Date().getFullYear(), 0, 1); // Obtén el primer día del año actual
+
+    try {
+      const registros = await this.registroModel.aggregate([
+        { $match: { createdAt: { $gte: primerDiaDelAnio, $lte: new Date() } } }, // Filtra registros del año actual
+        { $unwind: "$productos" },
+        {
+          $project: {
+            id: "$productos.id",
+            nombre: "$productos.nombre",
+            total: "$productos.total",
+            cantidadVendida: "$productos.cantidad",
+            mes: { $month: "$createdAt" }, // Obtén el número del mes
+          },
+        },
+        {
+          $group: {
+            _id: { id: "$id", mes: "$mes" },
+            nombre: { $first: "$nombre" },
+            total: { $sum: "$total" },
+            cantidadVendida: { $sum: "$cantidadVendida" },
+          },
+        },
+        {
+          $sort: { "_id.mes": 1, cantidadVendida: -1 }, // Ordena por mes ascendente y cantidad vendida descendente
+        },
+        {
+          $group: {
+            _id: "$_id.id",
+            mes: { $first: "$_id.mes" },
+            nombre: { $first: "$nombre" },
+            cantidadVendida: { $first: "$cantidadVendida" },
+            total: { $first: "$total" },
+          },
+        },
+      ]);
+
+      return {
+        success: true,
+        data: registros,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
+  async productoVendidoAnioConMes2() {
+    const primerDiaDelAnio = new Date(new Date().getFullYear(), 0, 1); // Obtén el primer día del año actual
+
+    try {
+      const registros = await this.registroModel.aggregate([
+        { $match: { createdAt: { $gte: primerDiaDelAnio, $lte: new Date() } } }, // Filtra registros del año actual
+        { $unwind: "$productos" },
+        {
+          $group: {
+            _id: {
+              id: "$productos.id",
+              mes: { $month: "$createdAt" },
+            },
+            nombre: { $first: "$productos.nombre" },
+            cantidadVendida: { $sum: "$productos.cantidad" },
+          },
+        },
+        {
+          $sort: { "_id.mes": 1, cantidadVendida: -1 }, // Ordena por mes ascendente y cantidad vendida descendente
+        },
+        {
+          $group: {
+            _id: "$_id.mes",
+            productoMasVendido: { $first: "$$ROOT" },
+          },
+        },
+        {
+          $replaceRoot: { newRoot: "$productoMasVendido" },
+        },
+      ]);
+
+      return {
+        success: true,
+        data: registros,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
   }
 
   async create(createRegistroDto) {
@@ -46,6 +177,7 @@ export class RegistroService {
       };
     }
   }
+
   async update(registro_id: number, updateRegistroDto: UpdateRegistroDto): Promise<Registro> {
     const updatedRegistro = await this.registroModel.findByIdAndUpdate(registro_id, CreateRegistroDto, { new: true });
     return updatedRegistro;

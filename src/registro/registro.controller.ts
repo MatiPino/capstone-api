@@ -6,7 +6,7 @@ import { UpdateRegistroDto } from "./dto/update-registro.dto";
 import { JwtAuthGuard } from "src/autenticacion/guards/auth.guard";
 
 @Controller("registro")
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class RegistroController {
   constructor(private readonly registroService: RegistroService) {}
 
@@ -22,11 +22,14 @@ export class RegistroController {
     return this.registroService.getRegistros();
   }
 
-  // Define findOne route with @Get(':id')
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    // Return registro with specified id
-    return this.registroService.getRegistro(+id);
+  @Get("productosVendidosMes")
+  getProductoVendidoMes() {
+    return this.registroService.productoVendidoMes();
+  }
+  @Get("productosVendidosAnio")
+  getProductoVendidoAnio() {
+    console.log("Hola");
+    return this.registroService.productoVendidoAnioConMes();
   }
 
   // Define update route with @Patch(':id')
@@ -38,5 +41,7 @@ export class RegistroController {
 
   // Define remove route with @Delete(':id')
   @Delete(":id")
-  remove(@Param("id") id: string) {}
+  remove(@Param("id") id: string) {
+    return "sfsdf " + id;
+  }
 }
