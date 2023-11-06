@@ -7,13 +7,18 @@ export class ProveedorController {
   constructor(private readonly proveedorService: ProveedorService) {}
 
   @Post()
-  create(@Body() createProveedorDto: CreateProveedorDto) {
+  crear(@Body() createProveedorDto: CreateProveedorDto) {
     return this.proveedorService.crear(createProveedorDto);
   }
 
   @Get()
   findAll() {
     return this.proveedorService.findAll();
+  }
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.proveedorService.traerProveedoresID(id);
   }
 
   @Delete(":id")

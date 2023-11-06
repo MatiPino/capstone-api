@@ -11,6 +11,7 @@ export class ComercioService {
     @InjectModel("Comercio") private comercioModel: Model<Comercio>,
     @InjectModel("Usuario") private usuarioModel: Model<Usuario>
   ) {}
+  
   async create(createComercioDto: CreateComercioDto) {
     const { direccion, nombre, propietario, telefono } = createComercioDto;
     try {
