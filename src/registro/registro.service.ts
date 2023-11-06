@@ -113,6 +113,81 @@ export class RegistroService {
     }
   }
 
+  async productoVendidoAnioPrueba() {
+    const primerDiaDelAnio = new Date(new Date().getFullYear(), 0, 1); // Obtén el primer día del año actual
+  
+    try {
+      const registros = await this.registroModel.aggregate([
+        { $match: { createdAt: { $gte: primerDiaDelAnio, $lte: new Date() } } }, // Filtra registros del año actual
+        { $unwind: "$productos" },
+        {
+          $project: {
+            id: "$productos.id",
+            nombre: "$productos.nombre",
+            total: "$productos.total",
+            cantidadVendida: "$productos.cantidad",
+            mes: { $month: "$createdAt" }, // Obtén el número del mes
+          },
+        },
+        {
+          $group: {
+            _id: { id: "$id", mes: "$mes" },
+            nombre: { $first: "$nombre" },
+            total: { $sum: "$total" },
+            cantidadVendida: { $sum: "$cantidadVendida" },
+          },
+        },
+        {
+          $sort: { "_id.mes": 1, cantidadVendida: -1 }, // Ordena por mes ascendente y cantidad vendida descendente
+        },
+        {
+          $group: {
+            _id: "$_id.id",
+            mes: { $first: "$_id.mes" },
+            nombre: { $first: "$nombre" },
+            cantidadVendida: { $first: "$cantidadVendida" },
+            total: { $first: "$total" },
+          },
+        },
+      ]);
+  
+      let productoMasVendido = { nombre: "", cantidadVendida: 0, mes: "" };
+      let productoMenosVendido = { nombre: "", cantidadVendida: Infinity, mes: "" };
+  
+      registros.forEach((registro) => {
+        if (registro.cantidadVendida > productoMasVendido.cantidadVendida) {
+          productoMasVendido.nombre = registro.nombre;
+          productoMasVendido.cantidadVendida = registro.cantidadVendida;
+          productoMasVendido.mes = registro.mes;
+        }
+  
+        if (registro.cantidadVendida < productoMenosVendido.cantidadVendida) {
+          productoMenosVendido.nombre = registro.nombre;
+          productoMenosVendido.cantidadVendida = registro.cantidadVendida;
+          productoMenosVendido.mes = registro.mes;
+        }
+      });
+      
+      console.log("REGISTROS", registros);
+      
+      console.log(productoMasVendido, "MAS VENDIDO DE", productoMasVendido.mes);
+      console.log(productoMenosVendido, "MAS VENDIDO DE", productoMenosVendido.mes);
+
+      return {
+        success: true,
+        data: registros,
+        productoMasVendido: productoMasVendido,
+        productoMenosVendido: productoMenosVendido,
+        
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
   async compararRegistroPorAnio() {
     try {
       const registros = await this.registroModel.aggregate([
