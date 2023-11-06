@@ -31,6 +31,11 @@ export class RegistroController {
     console.log("Hola");
     return this.registroService.productoVendidoAnioConMes();
   }
+  @Get("compararRegistroAnio")
+  getComRegistroAnio() {
+    console.log("Hola");
+    return this.registroService.compararRegistroPorAnio();
+  }
 
   // Define update route with @Patch(':id')
   @Patch(":id")

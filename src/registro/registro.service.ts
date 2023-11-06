@@ -113,34 +113,36 @@ export class RegistroService {
     }
   }
 
-  async productoVendidoAnioConMes2() {
-    const primerDiaDelAnio = new Date(new Date().getFullYear(), 0, 1); // Obtén el primer día del año actual
-
+  async compararRegistroPorAnio() {
     try {
       const registros = await this.registroModel.aggregate([
-        { $match: { createdAt: { $gte: primerDiaDelAnio, $lte: new Date() } } }, // Filtra registros del año actual
-        { $unwind: "$productos" },
+        {
+          $unwind: "$productos",
+        },
+        {
+          $project: {
+            anio: { $year: "$createdAt" }, // Obtén el número del año
+            mes: { $month: "$createdAt" }, // Obtén el número del mes
+            total: "$productos.total",
+          },
+        },
+
         {
           $group: {
-            _id: {
-              id: "$productos.id",
-              mes: { $month: "$createdAt" },
-            },
-            nombre: { $first: "$productos.nombre" },
-            cantidadVendida: { $sum: "$productos.cantidad" },
+            _id: { anio: "$anio", mes: "$mes" },
+            total: { $sum: "$total" },
           },
         },
         {
-          $sort: { "_id.mes": 1, cantidadVendida: -1 }, // Ordena por mes ascendente y cantidad vendida descendente
+          $sort: { "_id.anio": 1 },
         },
         {
-          $group: {
-            _id: "$_id.mes",
-            productoMasVendido: { $first: "$$ROOT" },
+          $project: {
+            _id: "$_id.anio",
+            mes: "$_id.mes",
+            anio: "$_id.anio",
+            total: "$total",
           },
-        },
-        {
-          $replaceRoot: { newRoot: "$productoMasVendido" },
         },
       ]);
 
