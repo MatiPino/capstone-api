@@ -201,15 +201,11 @@ export class RegistroService {
             total: "$productos.total",
           },
         },
-
         {
           $group: {
             _id: { anio: "$anio", mes: "$mes" },
             total: { $sum: "$total" },
           },
-        },
-        {
-          $sort: { "_id.anio": 1 },
         },
         {
           $project: {
@@ -219,11 +215,31 @@ export class RegistroService {
             total: "$total",
           },
         },
+        {
+          $group: {
+            _id: "$anio",
+            data: {
+              $push: {
+                mes: "$mes",
+                total: "$total",
+              },
+            },
+          },
+        },
+        {
+          $sort: { _id: 1 }, // Ordenar por año ascendente
+        },
       ]);
+
+      const result = {};
+      registros.forEach((registro) => {
+        const { _id, data } = registro;
+        result[_id] = data;
+      });
 
       return {
         success: true,
-        data: registros,
+        data: result,
       };
     } catch (error) {
       return {
