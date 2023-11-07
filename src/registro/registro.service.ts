@@ -18,10 +18,50 @@ export class RegistroService {
 
   async getRegistros() {
     try {
-      const registro = await this.registroModel.find();
+      const year = new Date().getFullYear(); // Obtén el año actual
+
+      const registros = await this.registroModel.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: new Date(`${year}-01-01`),
+              $lt: new Date(`${year + 1}-01-01`),
+            },
+          },
+        },
+        {
+          $unwind: "$productos",
+        },
+        {
+          $project: {
+            mes: { $month: "$createdAt" }, // Obtén el número del mes
+            total: "$productos.total",
+          },
+        },
+        {
+          $group: {
+            _id: {
+              id: "$id",
+              mes: "$mes",
+            }, // Agrupar por mes
+            total: { $sum: "$total" },
+          },
+        },
+        {
+          $project: {
+            _id: "$_id.id", // Cambiar el nombre de la propiedad '_id.mes' por 'mes
+            mes: "$_id.mes",
+            total: "$total",
+          },
+        },
+        {
+          $sort: { mes: 1 }, // Ordenar por mes ascendente
+        },
+      ]);
+
       return {
         success: true,
-        data: registro,
+        data: registros,
       };
     } catch (error) {
       return {
@@ -115,7 +155,7 @@ export class RegistroService {
 
   async productoVendidoAnioPrueba() {
     const primerDiaDelAnio = new Date(new Date().getFullYear(), 0, 1); // Obtén el primer día del año actual
-  
+
     try {
       const registros = await this.registroModel.aggregate([
         { $match: { createdAt: { $gte: primerDiaDelAnio, $lte: new Date() } } }, // Filtra registros del año actual
@@ -150,35 +190,10 @@ export class RegistroService {
           },
         },
       ]);
-  
-      let productoMasVendido = { nombre: "", cantidadVendida: 0, mes: "" };
-      let productoMenosVendido = { nombre: "", cantidadVendida: Infinity, mes: "" };
-  
-      registros.forEach((registro) => {
-        if (registro.cantidadVendida > productoMasVendido.cantidadVendida) {
-          productoMasVendido.nombre = registro.nombre;
-          productoMasVendido.cantidadVendida = registro.cantidadVendida;
-          productoMasVendido.mes = registro.mes;
-        }
-  
-        if (registro.cantidadVendida < productoMenosVendido.cantidadVendida) {
-          productoMenosVendido.nombre = registro.nombre;
-          productoMenosVendido.cantidadVendida = registro.cantidadVendida;
-          productoMenosVendido.mes = registro.mes;
-        }
-      });
-      
-      console.log("REGISTROS", registros);
-      
-      console.log(productoMasVendido, "MAS VENDIDO DE", productoMasVendido.mes);
-      console.log(productoMenosVendido, "MAS VENDIDO DE", productoMenosVendido.mes);
 
       return {
         success: true,
         data: registros,
-        productoMasVendido: productoMasVendido,
-        productoMenosVendido: productoMenosVendido,
-        
       };
     } catch (error) {
       return {

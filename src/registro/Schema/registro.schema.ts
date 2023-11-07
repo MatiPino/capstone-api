@@ -13,7 +13,8 @@ export const RegistroSchema = new Schema({
       const currentDate = new Date();
       // Restar un mes a la fecha actual
       currentDate.setFullYear(currentDate.getFullYear() - 1);
-      // currentDate.setMonth(currentDate.getMonth() - 1);
+
+      currentDate.setMonth(currentDate.getMonth() - 1);
       return currentDate;
     },
   },
