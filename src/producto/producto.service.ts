@@ -33,6 +33,7 @@ export class ProductoService {
     }
   }
   async findAllByComercio(req: Request) {
+    console.log("hola");
     try {
       const { authorization } = req.headers;
       console.log(authorization);

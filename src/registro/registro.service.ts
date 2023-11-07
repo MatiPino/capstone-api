@@ -132,11 +132,19 @@ export class RegistroService {
         },
         {
           $group: {
-            _id: "$_id.id",
-            mes: { $first: "$_id.mes" },
+            _id: "$_id.mes",
             nombre: { $first: "$nombre" },
             cantidadVendida: { $first: "$cantidadVendida" },
             total: { $first: "$total" },
+          },
+        },
+
+        {
+          $project: {
+            mes: "$_id",
+            nombre: "$nombre",
+            cantidadVendida: "$cantidadVendida",
+            total: "$total",
           },
         },
       ]);
