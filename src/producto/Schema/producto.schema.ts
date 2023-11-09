@@ -13,3 +13,7 @@ export const ProductoSchema = new Schema({
     default: Date.now,
   },
 });
+
+// ProductoSchema.pre('deleteMany', () => {
+//   console.log("hola");
+// });

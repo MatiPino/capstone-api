@@ -46,9 +46,9 @@ export class ProductoController {
     return this.productoService.findOne(id);
   }
 
-  @Put(":productoID")
-  updateProducto(@Body() createProductoDTO: CreateProductoDto, @Param("productoID") productoID) {
-    return this.productoService.updateProducto(productoID, createProductoDTO);
+  @Put(":id")
+  updateProducto(@Body() createProductoDTO: CreateProductoDto, @Param("id") id) {
+    return this.productoService.updateProducto(id, createProductoDTO);
   }
 
   @Patch(":id")
@@ -56,8 +56,12 @@ export class ProductoController {
     return this.productoService.update(id, updateProductoDto);
   }
 
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.productoService.remove(+id);
+  // @Delete(":id")
+  // remove(@Param("id") id: string) {
+  //   return this.productoService.remove(id);
+  // }
+  @Delete(":id/:idComercio")
+  remove(@Param("id") id: string, @Param("idComercio") idComercio: string) {
+    return this.productoService.remove(id, idComercio);
   }
 }

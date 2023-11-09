@@ -33,10 +33,8 @@ export class ProductoService {
     }
   }
   async findAllByComercio(req: Request) {
-    console.log("hola");
     try {
       const { authorization } = req.headers;
-      console.log(authorization);
       const decodedToken = this.jwtService.decode(authorization.split(" ")[1]);
       if (typeof decodedToken === "string") {
         return {
@@ -45,7 +43,7 @@ export class ProductoService {
         };
       }
       const { comercio }: any = decodedToken;
-
+      console.log(comercio);
       const producto = await this.productoModel.find({ comercio: comercio }).populate("comercio", "nombre _id").exec();
       return {
         success: true,
@@ -175,7 +173,35 @@ export class ProductoService {
     } catch (error) {}
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} autenticacion`;
+  async remove(id: string, comercio) {
+    // async remove(id: string) {
+    try {
+      const data = await this.productoModel.findByIdAndDelete(id);
+      if (!data) {
+        return {
+          success: false,
+          data: "Producto no encontrado",
+        };
+      }
+      const { productos } = await this.comercioModel.findOne({ _id: comercio }).select("productos");
+      const productoEliminado = productos.filter((producto) => producto != id);
+      const comercioEncontrado = await this.comercioModel.findByIdAndUpdate(comercio, { productos: productoEliminado });
+      if (!comercioEncontrado) {
+        return {
+          success: false,
+          data: [],
+        };
+      }
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
   }
 }
