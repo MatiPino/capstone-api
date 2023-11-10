@@ -9,13 +9,14 @@ export const RegistroSchema = new Schema({
   comercio: { type: Schema.ObjectId, ref: "Comercio", required: true },
   createdAt: {
     type: Date,
-    default: function () {
-      const currentDate = new Date();
-      // Restar un mes a la fecha actual
+    default: Date.now,
+    // default: function () {
+    //   const currentDate = new Date();
+    //   // Restar un mes a la fecha actual
 
-      // currentDate.setMonth(currentDate.getMonth() - 8);
-      // currentDate.setFullYear(currentDate.getFullYear() - 1);
-      return currentDate;
-    },
+    //   // currentDate.setMonth(currentDate.getMonth() - 8);
+    //   // currentDate.setFullYear(currentDate.getFullYear() - 1);
+    //   return currentDate;
+    // },
   },
 });
