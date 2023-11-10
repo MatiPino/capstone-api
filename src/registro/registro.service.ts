@@ -16,6 +16,21 @@ export class RegistroService {
     @InjectModel("Producto") private readonly productoModel: Model<Producto>
   ) {}
 
+  async ultimosRegistros() {
+    try {
+      const registros = await this.registroModel.find().sort({ createdAt: -1 }).limit(5);
+      return {
+        success: true,
+        data: registros,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
   async getRegistros() {
     try {
       const year = new Date().getFullYear(); // Obtén el año actual

@@ -22,6 +22,11 @@ export class RegistroController {
     return this.registroService.getRegistros();
   }
 
+  @Get("ultimosRegistros")
+  ultimosRegistros() {
+    return this.registroService.ultimosRegistros();
+  }
+
   @Get("productosVendidosMes")
   getProductoVendidoMes() {
     return this.registroService.productoVendidoMes();
