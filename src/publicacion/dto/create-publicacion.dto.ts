@@ -9,6 +9,8 @@ export class CreatePublicacionDto {
     codigo_barra: string;
     @IsString()
     categoria: string;
+    @IsString()
+    proveedorId: string;
     
     @IsOptional()
     imagen: string;

@@ -7,4 +7,5 @@ export interface Publicacion extends Document {
     categoria: string;
     imagen?: string;
     createdAt: Date;
+    proveedorId: string;
 }

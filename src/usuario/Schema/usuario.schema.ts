@@ -9,5 +9,6 @@ export const UsuarioSchema = new Schema({
   correo: { type: String, required: true },
   autentificacion: { type: Schema.ObjectId, ref: "Autenticacion" },
   comercio: { type: Schema.ObjectId, ref: "Comercio", required: false },
+  publicacion: [{ type: Schema.ObjectId, ref: "Publicacion", required: false }],
   date_added: { type: Date, default: Date.now },
 });
