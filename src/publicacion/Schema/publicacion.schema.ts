@@ -6,6 +6,7 @@ export const PublicacionSchema = new Schema({
     codigo_barra: { type: String, required: true },
     categoria: { type: String, required: true },
     imagen : { type: String, required: false },
+    proveedorId: { type: String, required: true },
     createdAt: {
         type: Date,
         default: Date.now,

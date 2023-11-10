@@ -7,4 +7,5 @@ export interface Usuario extends Document {
   readonly correo: String;
   autentificacion?: any;
   comercio: any;
+  publicacion: any;
 }
