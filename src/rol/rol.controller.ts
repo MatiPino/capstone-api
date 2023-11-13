@@ -27,6 +27,12 @@ export class RolController {
     return this.rolService.todosRol(rol);
   }
 
+  @Get(":rol")
+  @Rol(RolEnum.ADMIN)
+  findUsuarios(@Param("rol") rol: string) {
+    return this.rolService.todosRol(rol);
+  }
+
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateRolDto: UpdateRolDto) {
     return this.rolService.update(+id, updateRolDto);

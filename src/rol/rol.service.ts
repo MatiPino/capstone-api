@@ -69,12 +69,13 @@ export class RolService {
   }
   async todosRol(rol: string) {
     try {
-      const rolEncontrado = await this.rolModel.findOne({ rol: rol }).populate("usuarios", "-imagen");
+      const rolEncontrado = await this.rolModel
+        .findOne({ rol: rol })
+        .populate({ path: "usuarios", model: "Usuario", select: "-imagen", populate: { path: "comercio", model: "Comercio", select: "nombre" } });
       const usuarios = rolEncontrado.usuarios;
       const dataPromises = usuarios.map(async (usuario) => {
         const rut = await this.autenticacionModel.findById(usuario.autentificacion).select("rut");
-        console.log({rut, usuario});
-        
+
         return {
           ...usuario._doc,
           rol: rolEncontrado.rol,

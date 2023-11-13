@@ -11,7 +11,7 @@ export class ComercioService {
     @InjectModel("Comercio") private comercioModel: Model<Comercio>,
     @InjectModel("Usuario") private usuarioModel: Model<Usuario>
   ) {}
-  
+
   async create(createComercioDto: CreateComercioDto) {
     const { direccion, nombre, propietario, telefono } = createComercioDto;
     try {
@@ -61,6 +61,21 @@ export class ComercioService {
   async findOne(id: string) {
     try {
       const data = await this.comercioModel.findById(id).exec();
+      return {
+        success: true,
+        data: data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
+  async findProductos(id: string) {
+    try {
+      const data = await this.comercioModel.findById(id).populate("productos").select("productos");
       return {
         success: true,
         data: data,

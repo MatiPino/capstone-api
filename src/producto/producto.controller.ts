@@ -38,7 +38,6 @@ export class ProductoController {
 
   @Get(":id/:idComercio")
   findOneByComercio(@Param("id") id: string, @Param("idComercio") idComercio: string) {
-    console.log("hola");
     return this.productoService.findOneByComercio(id, idComercio);
   }
   @Get(":id")

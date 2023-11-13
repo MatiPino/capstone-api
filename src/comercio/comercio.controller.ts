@@ -24,6 +24,11 @@ export class ComercioController {
     return this.comercioService.findOne(id);
   }
 
+  @Get("productos/:id")
+  findProductos(@Param("id") id: string) {
+    return this.comercioService.findProductos(id);
+  }
+
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateComercioDto: UpdateComercioDto) {
     return this.comercioService.update(+id, updateComercioDto);
