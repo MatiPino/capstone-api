@@ -120,7 +120,7 @@ export class ProductoService {
   }
 
   async crear(createProductoDTO: CreateProductoDto) {
-    const { codigo_barra, comercio, nombre, precio, proveedor, imagenes } = createProductoDTO;
+    const { codigo_barra, comercio, nombre, precio, cantidad, proveedor, imagenes } = createProductoDTO;
     try {
       const producto = new this.productoModel({
         nombre,
@@ -128,6 +128,7 @@ export class ProductoService {
         codigo_barra,
         comercio,
         imagenes,
+        cantidad,
       });
       const data = await producto.save();
       await this.comercioModel.findByIdAndUpdate(comercio, { $push: { productos: data._id } });

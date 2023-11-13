@@ -10,6 +10,9 @@ export class CreateProductoDto {
   @IsString()
   codigo_barra: string;
 
+  @IsOptional()
+  cantidad: number;
+
   @IsString()
   comercio: string;
 
