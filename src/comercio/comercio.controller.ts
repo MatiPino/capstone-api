@@ -23,6 +23,10 @@ export class ComercioController {
   findOne(@Param("id") id: string) {
     return this.comercioService.findOne(id);
   }
+  @Get("registros/:id")
+  findComercio(@Param("id") id: string) {
+    return this.comercioService.findComercio(id);
+  }
 
   @Get("productos/:id")
   findProductos(@Param("id") id: string) {

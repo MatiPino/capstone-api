@@ -72,6 +72,35 @@ export class ComercioService {
       };
     }
   }
+  async findComercio(id: string) {
+    try {
+      const primerDia = new Date();
+      primerDia.setDate(1);
+
+      const ultimoDia = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+      const data = await this.comercioModel
+        .findById(id)
+        .populate({
+          path: "registros",
+          match: {
+            createdAt: { $gte: primerDia, $lte: ultimoDia },
+          },
+        })
+        .select("registros")
+        .exec();
+
+      return {
+        success: true,
+        data: data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
 
   async findProductos(id: string) {
     try {
