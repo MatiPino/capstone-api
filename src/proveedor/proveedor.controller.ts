@@ -22,7 +22,7 @@ export class ProveedorController {
   }
 
   @Delete(":id")
-  remove(@Body("id") id: string) {
+  remove(@Param("id") id: string) {
     return this.proveedorService.remove(id);
   }
 }

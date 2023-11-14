@@ -76,7 +76,8 @@ export class ProveedorService {
 
   async remove (id: string) {
     try {
-      const proveedor = await this.proveedorModel.findOneAndDelete({id});
+      const proveedor = await this.proveedorModel.findByIdAndDelete(id);
+      console.log(proveedor);
       return {
         success: true,
         data: proveedor,
