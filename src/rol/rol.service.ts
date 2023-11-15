@@ -15,6 +15,7 @@ export class RolService {
   getRol(rolID: any) {
     throw new Error("Method not implemented.");
   }
+
   async createRol(createRolDTO: CreateRolDto) {
     try {
       const rol = new this.rolModel(createRolDTO);
@@ -53,6 +54,7 @@ export class RolService {
       };
     }
   }
+
   async findOne(id: string) {
     try {
       const rol = await this.rolModel.findById(id).populate("rol");
@@ -67,6 +69,7 @@ export class RolService {
       };
     }
   }
+
   async todosRol(rol: string) {
     try {
       const rolEncontrado = await this.rolModel
@@ -94,6 +97,23 @@ export class RolService {
       };
     }
   }
+
+  async todosUsuarios() {
+    try {
+      const rol = await this.rolModel.find({rol: {$ne: "admin"}}).populate({path: "usuarios" , model: "Usuario", select: "_id nombre apellido rol correo"});
+      return {
+        success: true,
+        data: rol,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
+
   update(id: number, updateRolDto: UpdateRolDto) {
     return `This action updates a #${id} rol`;
   }

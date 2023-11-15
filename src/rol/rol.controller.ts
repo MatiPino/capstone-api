@@ -16,11 +16,19 @@ export class RolController {
   createPost(@Body() createRolDto: CreateRolDto) {
     return this.rolService.createRol(createRolDto);
   }
+
   @Get()
   @Rol(RolEnum.ADMIN, RolEnum.CLIENTE)
   findAll() {
     return this.rolService.findAll();
   }
+
+  @Get("gestion")
+  @Rol(RolEnum.ADMIN)
+  findGestion() {
+    return this.rolService.todosUsuarios();
+  }
+
 
   @Get(":id")
   findOne(@Param("id") rol: string) {
