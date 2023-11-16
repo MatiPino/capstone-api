@@ -105,7 +105,7 @@ export class UsuarioService {
   async getUsuario(usuarioID: string) {
     try {
       const usuario = await this.usuarioModel.findById(usuarioID).populate("rol", "-usuarios");
-      console.log(usuario);
+      // console.log(usuario);
       return { success: true, data: usuario };
     } catch (error) {
       return { success: false, data: error.message };

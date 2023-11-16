@@ -18,7 +18,7 @@ export class AutenticacionController {
   @Post("login") // NO poner useGuard a login, porque no tiene token para validar
   login(@Body() credenciales: CreateAutenticacionDto, @Req() req: Request) {
     const { headers } = req;
-    console.log(credenciales);
+    // console.log(credenciales);
     return this.autenticacionService.login(credenciales);
   }
   @Post("registrar")
@@ -29,7 +29,7 @@ export class AutenticacionController {
   @Post("verificarToken")
   verificarToken(@Body() body: any) {
     const { token } = body;
-    console.log(token);
+    // console.log(token);
     return this.autenticacionService.verificarToken(token);
   }
   @Get()
