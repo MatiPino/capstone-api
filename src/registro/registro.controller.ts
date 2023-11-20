@@ -33,17 +33,14 @@ export class RegistroController {
   }
   @Get("productosVendidosAnio")
   getProductoVendidoAnio() {
-    console.log("Hola");
     return this.registroService.productoVendidoAnioConMes();
   }
   @Get("productosVendidosAnioPrueba")
   getProductoVendidoAnioPrueba() {
-    console.log("Hola");
     return this.registroService.productoVendidoAnioPrueba();
   }
   @Get("compararRegistroAnio")
   getComRegistroAnio() {
-    console.log("Hola");
     return this.registroService.compararRegistroPorAnio();
   }
 

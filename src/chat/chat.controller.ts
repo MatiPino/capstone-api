@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -12,23 +11,13 @@ export class ChatController {
     return this.chatService.crear(createChatDto);
   }
 
-  @Get()
-  findAll() {
-    return this.chatService.buscarTodos();
+  @Get('buscarTodos/:emisorID')
+  findAll(@Param('emisorID') emisorID: string) {
+    return this.chatService.buscarTodos(emisorID);
   }
 
   @Get(':id')
-  findUsuario(@Param('id') id: string) {
+  traerChatID(@Param('id') id: string) {
     return this.chatService.traerChatID(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
-    return this.chatService.update(+id, updateChatDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatService.remove(+id);
   }
 }

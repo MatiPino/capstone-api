@@ -309,6 +309,9 @@ export class RegistroService {
     }
   }
 
+  
+  
+
   async update(registro_id: number, updateRegistroDto: UpdateRegistroDto): Promise<Registro> {
     const updatedRegistro = await this.registroModel.findByIdAndUpdate(registro_id, CreateRegistroDto, { new: true });
     return updatedRegistro;
