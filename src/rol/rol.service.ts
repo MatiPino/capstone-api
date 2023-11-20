@@ -100,7 +100,53 @@ export class RolService {
 
   async todosUsuarios() {
     try {
-      const rol = await this.rolModel.find({rol: {$ne: "admin"}}).populate({path: "usuarios" , model: "Usuario", select: "_id nombre apellido rol correo"});
+      const rol = await this.rolModel.aggregate([
+        {
+          $match: {
+            rol: { $ne: "admin" },
+          },
+        },
+        {
+          $lookup: {
+            from: "usuarios", // El nombre de la colección de usuarios
+            localField: "usuarios",
+            foreignField: "_id",
+            as: "usuariosInfo",
+          },
+        },
+        {
+          $unwind: "$usuariosInfo",
+        },
+        {
+          $lookup: {
+            from: "autenticacions", // El nombre de la colección de autenticaciones
+            localField: "usuariosInfo.autentificacion",
+            foreignField: "_id",
+            as: "autenticacion",
+          },
+        },
+        {
+          $unwind: {
+            path: "$autenticacion",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            _id: "$usuariosInfo._id",
+            rol: 1, // Referencia directa al campo "rol" del documento "rol"
+            nombre: "$usuariosInfo.nombre",
+            apellido: "$usuariosInfo.apellido",
+            correo: "$usuariosInfo.correo",
+            rut: "$autenticacion.rut",
+            autentificacion: {
+              _id: "$autenticacion._id",
+              rut: "$autenticacion.rut",
+            },
+          },
+        },
+      ]);
+
       return {
         success: true,
         data: rol,
@@ -113,6 +159,27 @@ export class RolService {
     }
   }
 
+  // async todosUsuarios() {
+  //   try {
+  //     const rol = await this.rolModel
+  //       .find({ rol: { $ne: "admin" } })
+  //       .populate({
+  //         path: "usuarios",
+  //         model: "Usuario",
+  //         populate: { path: "autentificacion", model: "Autenticacion" },
+  //         select: "_id nombre apellido rol correo autentificacion",
+  //       });
+  //     return {
+  //       success: true,
+  //       data: rol,
+  //     };
+  //   } catch (error) {
+  //     return {
+  //       success: false,
+  //       data: error.message,
+  //     };
+  //   }
+  // }
 
   update(id: number, updateRolDto: UpdateRolDto) {
     return `This action updates a #${id} rol`;

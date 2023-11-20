@@ -289,7 +289,6 @@ export class RegistroService {
 
   async create(createRegistroDto) {
     try {
-      console.log(createRegistroDto);
       const data = await this.registroModel.create(createRegistroDto);
       await this.comercioModel.findByIdAndUpdate(createRegistroDto.comercio, { $push: { registros: data._id } });
       for (const producto of createRegistroDto.productos) {

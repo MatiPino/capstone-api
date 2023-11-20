@@ -10,34 +10,34 @@ export class ProveedorService {
   constructor(
     @InjectModel("Proveedor") private readonly proveedorModel: Model<Proveedor>,
     @InjectModel("Usuario") private readonly usuarioModel: Model<Usuario>
-    ) {}
+  ) {}
 
-    async crear(CreateProveedorDto: CreateProveedorDto) {
-      const { nombre, telefono, descripcion, correo, clienteId } = CreateProveedorDto;
-      try {
-        const proveedor = new this.proveedorModel({
-          nombre,
-          telefono,
-          descripcion,
-          correo,
-          clienteId
-        });
-  
-        const data = await proveedor.save();
-        await this.usuarioModel.findByIdAndUpdate(clienteId, {
-          proveedor: data._id
-        })
-        return {
-          success: true,
-          data: data,
-        };
-      } catch (error) {
-        return {
-          success: false,
-          data: error.message,
-        };
-      }
+  async crear(CreateProveedorDto: CreateProveedorDto) {
+    const { nombre, telefono, descripcion, correo, clienteId } = CreateProveedorDto;
+    try {
+      const proveedor = new this.proveedorModel({
+        nombre,
+        telefono,
+        descripcion,
+        correo,
+        clienteId,
+      });
+
+      const data = await proveedor.save();
+      await this.usuarioModel.findByIdAndUpdate(clienteId, {
+        proveedor: data._id,
+      });
+      return {
+        success: true,
+        data: data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
     }
+  }
 
   async findAll() {
     try {
@@ -56,7 +56,7 @@ export class ProveedorService {
 
   async traerProveedoresID(id: string) {
     try {
-      const proveedor = await this.proveedorModel.find({clienteId: id});
+      const proveedor = await this.proveedorModel.find({ clienteId: id });
       return {
         success: true,
         data: proveedor,
@@ -70,14 +70,13 @@ export class ProveedorService {
   }
 
   async update(id: string, updateProveedorDto: CreateProveedorDto) {
-    try {     
+    try {
     } catch (error) {}
   }
 
-  async remove (id: string) {
+  async remove(id: string) {
     try {
       const proveedor = await this.proveedorModel.findByIdAndDelete(id);
-      console.log(proveedor);
       return {
         success: true,
         data: proveedor,

@@ -29,7 +29,6 @@ export class RolController {
     return this.rolService.todosUsuarios();
   }
 
-
   @Get(":id")
   findOne(@Param("id") rol: string) {
     return this.rolService.todosRol(rol);

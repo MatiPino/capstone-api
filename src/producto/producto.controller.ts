@@ -16,7 +16,6 @@ export class ProductoController {
 
   @Post()
   create(@Body() createProductoDto: CreateProductoDto, @Req() req: Request) {
-    console.log(req.headers);
     const { authorization } = req.headers;
 
     return this.productoService.create(createProductoDto);

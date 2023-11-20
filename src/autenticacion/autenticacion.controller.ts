@@ -17,19 +17,17 @@ export class AutenticacionController {
 
   @Post("login") // NO poner useGuard a login, porque no tiene token para validar
   login(@Body() credenciales: CreateAutenticacionDto, @Req() req: Request) {
-    const { headers } = req;
     // console.log(credenciales);
     return this.autenticacionService.login(credenciales);
   }
-  @Post("registrar")
-  @UseGuards(JwtAuthGuard)
-  registrar(@Body() body: any) {
-    return this.autenticacionService.crear(body);
-  }
+  // @Post("registrar")
+  // @UseGuards(JwtAuthGuard)
+  // registrar(@Body() body: any) {
+  //   return this.autenticacionService.crear(body);
+  // }
   @Post("verificarToken")
   verificarToken(@Body() body: any) {
     const { token } = body;
-    // console.log(token);
     return this.autenticacionService.verificarToken(token);
   }
   @Get()
@@ -53,6 +51,6 @@ export class AutenticacionController {
   @Delete(":id")
   @UseGuards(JwtAuthGuard)
   remove(@Param("id") id: string) {
-    return this.autenticacionService.remove(+id);
+    return this.autenticacionService.remove(id);
   }
 }

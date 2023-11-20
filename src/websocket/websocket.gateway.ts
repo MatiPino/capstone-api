@@ -13,39 +13,36 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    client.emit("init", `Bienvenido tu ID es ${client.id}`)
+    client.emit("init", `Bienvenido tu ID es ${client.id}`);
     console.log({ mensaje: "cliente conectado", id: client.id });
     this.websocketService.registrarCliente(client);
     this.server.on("event", (data) => {
       return data;
     });
-    this.server.emit('userStatusChanged', { userId: client.id, isOnline: true });
+    this.server.emit("userStatusChanged", { userId: client.id, isOnline: true });
     console.log(this.websocketService.getClientes());
   }
-  
+
   handleDisconnect(client: any) {
-    console.log({ mensaje: "cliente desconectadotado", id: client.id });
     this.websocketService.eliminarCliente(client.id);
-    this.server.emit('userStatusChanged', { userId: client.id, isOnline: false });
+    this.server.emit("userStatusChanged", { userId: client.id, isOnline: false });
   }
 
-  @SubscribeMessage('seleccionarUsuario')
+  @SubscribeMessage("seleccionarUsuario")
   handleSeleccionarUsuario(client: Socket, payload: any) {
     console.log(`Usuario ${client.id} seleccionó a ${payload.selectedUserId}`);
     // Emite el evento 'seleccionarUsuario' para informar a otros clientes
-    this.server.emit('seleccionarUsuario', { selectedUserId: payload, selectedByUserId: client.id });
+    this.server.emit("seleccionarUsuario", { selectedUserId: payload, selectedByUserId: client.id });
     console.log(payload);
     console.log(client.id);
-    
   }
 
   @SubscribeMessage("event")
   handleEvent(client: any, payload: any): string {
-    console.log(payload);
     this.server.emit("event", payload);
     return "Hello world!";
   }
-  
+
   @SubscribeMessage("venderProducto")
   venderProducto(client: any, payload: any): string {
     this.server.emit("venderProducto", payload);
@@ -53,14 +50,14 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
   }
 
   // Intento implementacion de mensajes //
-  
-  @SubscribeMessage('mensaje')
+
+  @SubscribeMessage("mensaje")
   handleMensaje(client: Socket, payload: any) {
     console.log(`Mensaje recibido de ${client.id}: ${payload.mensaje}`);
-    
+
     // Asegúrate de que el evento "mensaje" se emita solo una vez
     if (payload && payload.mensaje) {
-      this.server.emit('mensaje', payload);
+      this.server.emit("mensaje", payload);
     }
   }
 }

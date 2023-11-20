@@ -14,6 +14,10 @@ export class UsuarioController {
   create(@Body() body: any) {
     return this.usuarioService.crear(body);
   }
+  @Post("usuario")
+  createUsuario(@Body() body: any) {
+    return this.usuarioService.crearUsuario(body);
+  }
 
   // Define findAll route with @Get()
   @Get()
@@ -26,19 +30,18 @@ export class UsuarioController {
     return this.usuarioService.getUsuario(id);
   }
 
-  @Get("img/:id")
-  buscarImagen(@Param("id") id: string) {
-    console.log(id);
-    return this.usuarioService.buscarImagen(id);
+  @Get("img/:rut")
+  buscarImagen(@Param("rut") rut: string) {
+    return this.usuarioService.buscarImagen(rut);
   }
 
-  @Put(":usuarioID")
-  updateUsuario(@Body() createUsuarioDTO: CreateUsuarioDto, @Param("usuarioID") usuarioID) {
-    return this.usuarioService.updateUsuario(usuarioID, createUsuarioDTO);
+  @Put()
+  updateUsuario(@Body() createUsuarioDTO: CreateUsuarioDto) {
+    return this.usuarioService.updateUsuario(createUsuarioDTO);
   }
 
   @Delete("/:id")
   remove(@Param("id") id: string) {
-    return this.usuarioService.remove(+id);
+    return this.usuarioService.remove(id);
   }
 }

@@ -43,7 +43,6 @@ export class ProductoService {
         };
       }
       const { comercio }: any = decodedToken;
-      console.log(comercio);
       const producto = await this.productoModel.find({ comercio: comercio }).populate("comercio", "nombre _id").exec();
       return {
         success: true,
@@ -58,10 +57,8 @@ export class ProductoService {
   }
 
   async findOneByComercio(codigo_barra: string, comercio: string) {
-    console.log({ codigo_barra, comercio });
     try {
       const producto = await this.productoModel.findOne({ codigo_barra, comercio }).select("-imagenes");
-      console.log({ producto });
       if (!producto) {
         return {
           success: false,
@@ -80,7 +77,6 @@ export class ProductoService {
     }
   }
   async findOne(id: string) {
-    console.log(typeof id);
     try {
       const producto = await this.productoModel.findOne({ codigo_barra: id });
       return {
@@ -145,7 +141,6 @@ export class ProductoService {
   }
 
   async updateProducto(productoID: string, createProductoDto: CreateProductoDto) {
-    console.log({ productoID, createProductoDto });
     try {
       const updatedProducto = await this.productoModel.findByIdAndUpdate(productoID, createProductoDto, { new: true });
 
@@ -159,7 +154,6 @@ export class ProductoService {
         success: true,
         data: updatedProducto,
       };
-      console.log(res);
       return res;
     } catch (error) {
       return {

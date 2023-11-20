@@ -23,7 +23,6 @@ export class UsuarioService {
   async crear(body: any) {
     try {
       const existeAut = await this.autenticacionModel.findOne({ rut: body.rut }).exec();
-      console.log(existeAut);
       const rol = await this.rolModel.findOne({ rol: body.rol }).exec();
 
       // Verifica si el rut ya existe
@@ -33,7 +32,7 @@ export class UsuarioService {
           data: "Este Rut ya existe",
         };
       }
-      
+
       const autenticacion = new this.autenticacionModel({ rut: body.rut, contrasena: body.contrasena });
       const usuario = new this.usuarioModel({
         nombre: body.nombre,
@@ -56,7 +55,6 @@ export class UsuarioService {
       };
     } catch (error) {
       const { code, errors } = error;
-      console.log(code);
       if (code === 11000) {
         return {
           success: false,
@@ -64,6 +62,21 @@ export class UsuarioService {
         };
       }
 
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+
+  async crearUsuario(body: any) {
+    try {
+      const data = await this.usuarioModel.create(body);
+      return {
+        success: true,
+        data: data,
+      };
+    } catch (error) {
       return {
         success: false,
         data: error.message,
@@ -86,10 +99,13 @@ export class UsuarioService {
     }
   }
 
-  async buscarImagen(id: string) {
-    console.log(id);
+  async buscarImagen(rut: string) {
     try {
-      const usuario = await this.usuarioModel.findById(id).select("imagen");
+      const usuario = await this.usuarioModel
+        .findOne({})
+        .populate({ path: "autentificacion", model: "Autenticacion", match: { rut: rut }, select: "rut" })
+        .select("imagen");
+
       return {
         success: true,
         data: usuario,
@@ -105,7 +121,6 @@ export class UsuarioService {
   async getUsuario(usuarioID: string) {
     try {
       const usuario = await this.usuarioModel.findById(usuarioID).populate("rol", "-usuarios");
-      // console.log(usuario);
       return { success: true, data: usuario };
     } catch (error) {
       return { success: false, data: error.message };
@@ -116,11 +131,10 @@ export class UsuarioService {
     const usuario = new this.usuarioModel(CreateUsuarioDto);
     return await usuario.save();
   }
-  async updateUsuario(usuarioID: string, createUsuarioDto: CreateUsuarioDto) {
-    console.log({ usuarioID, createUsuarioDto });
+  async updateUsuario(createUsuarioDto: CreateUsuarioDto) {
     try {
-      const updatedUsuario = await this.usuarioModel.findByIdAndUpdate(usuarioID, createUsuarioDto, { new: true });
-
+      // const rol = await this.rolModel.findOne({ rol: createUsuarioDto.rol }).select("rol").exec();
+      const updatedUsuario = await this.usuarioModel.findByIdAndUpdate(createUsuarioDto._id, { ...createUsuarioDto }, { new: true });
       if (!updatedUsuario) {
         return {
           success: false,
@@ -131,7 +145,6 @@ export class UsuarioService {
         success: true,
         data: updatedUsuario,
       };
-      console.log(res);
       return res;
     } catch (error) {
       return {
@@ -140,7 +153,22 @@ export class UsuarioService {
       };
     }
   }
-  remove(id: number) {
-    return `This action removes a #${id} usuario`;
+  async remove(id: string) {
+    try {
+      console.log(id);
+      const data = await this.usuarioModel.findById(id).exec();
+      const auth = await this.autenticacionModel.findByIdAndRemove(data.autentificacion).exec();
+      const rol = await this.rolModel.updateOne({ usuarios: id }, { $pull: { usuarios: id } }).exec();
+      const datax = await data.deleteOne();
+      return {
+        success: true,
+        data: datax,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
   }
 }

@@ -29,7 +29,6 @@ export class ComercioService {
         })
         .exec();
 
-      console.log({ data, usuario });
       return {
         success: true,
         data: data,
