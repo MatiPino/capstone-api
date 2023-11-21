@@ -20,4 +20,9 @@ export class ChatController {
   traerChatID(@Param('id') id: string) {
     return this.chatService.traerChatID(id);
   }
+
+  @Get()
+  traerTodos() {
+    return this.chatService.traerTodos();
+  }
 }

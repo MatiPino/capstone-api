@@ -13,6 +13,7 @@ import { WebsocketModule } from "./websocket/websocket.module";
 import { PublicacionModule } from './publicacion/publicacion.module';
 import { PruebaModule } from './prueba/prueba.module';
 import { ChatModule } from './chat/chat.module';
+import { TicketsModule } from './tickets/tickets.module';
 @Module({
   imports: [
     MongooseModule.forRoot("mongodb+srv://anperkins:oegPUpEmKBdeJqGg@cluster0.qz6sj4p.mongodb.net/capstone"),
@@ -27,6 +28,7 @@ import { ChatModule } from './chat/chat.module';
     PublicacionModule,
     PruebaModule,
     ChatModule,
+    TicketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
