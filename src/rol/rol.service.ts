@@ -5,11 +5,14 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Rol } from "./interfaces/rol.interface";
 import { Autenticacion } from "src/autenticacion/interfaces/autenticacion.interface";
+import { Request } from "express";
+import { JwtService } from "@nestjs/jwt";
 @Injectable()
 export class RolService {
   constructor(
     @InjectModel("Rol") private readonly rolModel: Model<Rol>,
-    @InjectModel("Autenticacion") private readonly autenticacionModel: Model<Autenticacion>
+    @InjectModel("Autenticacion") private readonly autenticacionModel: Model<Autenticacion>,
+    private jwtService: JwtService
   ) {}
 
   getRol(rolID: any) {
@@ -136,6 +139,70 @@ export class RolService {
             _id: "$usuariosInfo._id",
             rol: 1, // Referencia directa al campo "rol" del documento "rol"
             nombre: "$usuariosInfo.nombre",
+            apellido: "$usuariosInfo.apellido",
+            correo: "$usuariosInfo.correo",
+            rut: "$autenticacion.rut",
+            autentificacion: {
+              _id: "$autenticacion._id",
+              rut: "$autenticacion.rut",
+            },
+          },
+        },
+      ]);
+
+      return {
+        success: true,
+        data: rol,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: error.message,
+      };
+    }
+  }
+  async chat(req: Request) {
+    const token = req.headers.authorization.split(" ")[1];
+    const payload: any = this.jwtService.decode(token);
+    const rolUsuario = payload.rol;
+    try {
+      const rol = await this.rolModel.aggregate([
+        {
+          $match: {
+            rol: { $ne: rolUsuario },
+          },
+        },
+        {
+          $lookup: {
+            from: "usuarios", // El nombre de la colección de usuarios
+            localField: "usuarios",
+            foreignField: "_id",
+            as: "usuariosInfo",
+          },
+        },
+        {
+          $unwind: "$usuariosInfo",
+        },
+        {
+          $lookup: {
+            from: "autenticacions", // El nombre de la colección de autenticaciones
+            localField: "usuariosInfo.autentificacion",
+            foreignField: "_id",
+            as: "autenticacion",
+          },
+        },
+        {
+          $unwind: {
+            path: "$autenticacion",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            _id: "$usuariosInfo._id",
+            rol: 1, // Referencia directa al campo "rol" del documento "rol"
+            nombre: "$usuariosInfo.nombre",
+            imagen: "$usuariosInfo.imagen",
             apellido: "$usuariosInfo.apellido",
             correo: "$usuariosInfo.correo",
             rut: "$autenticacion.rut",

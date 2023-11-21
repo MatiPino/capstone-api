@@ -1,4 +1,4 @@
-import { Controller, Res, Get, Post, Body, Patch, Param, Delete, HttpStatus, NotFoundException, UseGuards } from "@nestjs/common";
+import { Controller, Res, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from "@nestjs/common";
 import { RolService } from "./rol.service";
 import { CreateRolDto } from "./dto/create-rol.dto";
 import { UpdateRolDto } from "./dto/update-rol.dto";
@@ -6,6 +6,7 @@ import { JwtAuthGuard } from "src/autenticacion/guards/auth.guard";
 import { Rol } from "src/.decorators/roles.decorator";
 import { Rol as RolEnum } from "src/.enums/rol.enum";
 import RolGuard from "src/guards/rol.guard";
+import { Request } from "express";
 
 @Controller("rol")
 @UseGuards(JwtAuthGuard, RolGuard)
@@ -27,6 +28,11 @@ export class RolController {
   @Rol(RolEnum.ADMIN)
   findGestion() {
     return this.rolService.todosUsuarios();
+  }
+  @Get("chat")
+  @Rol(RolEnum.ADMIN, RolEnum.CLIENTE, RolEnum.PROVEEDOR)
+  chat(@Req() request: Request) {
+    return this.rolService.chat(request);
   }
 
   @Get(":id")
