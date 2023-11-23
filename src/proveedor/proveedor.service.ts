@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, BadRequestException } from "@nestjs/common";
 import { CreateProveedorDto } from "./dto/create-proveedor.dto";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
@@ -14,6 +14,10 @@ export class ProveedorService {
 
   async crear(CreateProveedorDto: CreateProveedorDto) {
     const { nombre, telefono, descripcion, correo, clienteId } = CreateProveedorDto;
+
+    if (!CreateProveedorDto) {
+      throw new BadRequestException("Favor de ingresar los datos requeridos");
+    }
     try {
       const proveedor = new this.proveedorModel({
         nombre,
@@ -28,14 +32,11 @@ export class ProveedorService {
         proveedor: data._id,
       });
       return {
-        success: true,
+        estado: "Proveedor creado exitosamente",
         data: data,
       };
     } catch (error) {
-      return {
-        success: false,
-        data: error.message,
-      };
+      throw new BadRequestException("Error al crear el proveedor");
     }
   }
 
@@ -43,14 +44,11 @@ export class ProveedorService {
     try {
       const proveedor = await this.proveedorModel.find();
       return {
-        success: true,
+        estado: "Proveedores encontrados",
         data: proveedor,
       };
     } catch (error) {
-      return {
-        success: false,
-        data: error.message,
-      };
+      throw new BadRequestException("Error al encontrar los proveedores");
     }
   }
 
@@ -58,20 +56,31 @@ export class ProveedorService {
     try {
       const proveedor = await this.proveedorModel.find({ clienteId: id });
       return {
-        success: true,
+        estado: "Tus proveedores encontrados",
         data: proveedor,
       };
     } catch (error) {
-      return {
-        success: false,
-        data: error.message,
-      };
+      throw new BadRequestException("Error al encontrar tus proveedores");
     }
   }
 
-  async update(id: string, updateProveedorDto: CreateProveedorDto) {
+  async updateProveedor(id: string, CreateProveedorDto: CreateProveedorDto) {
     try {
-    } catch (error) {}
+      const updateProveedor = await this.proveedorModel.findByIdAndUpdate(id, { ...CreateProveedorDto }, { new: true });
+      if (!updateProveedor) {
+        return {
+          estado: 'No se encontró el proveedor',
+          data: [],
+        };
+      }
+      const res = {
+        estado: 'Proveedor actualizado exitosamente',
+        data: updateProveedor,
+      };
+      return res;
+    } catch (error) {
+      throw new BadRequestException("Error al actualizar el proveedor");
+    }
   }
 
   async remove(id: string) {

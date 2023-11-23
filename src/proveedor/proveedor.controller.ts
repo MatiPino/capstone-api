@@ -25,4 +25,9 @@ export class ProveedorController {
   remove(@Param("id") id: string) {
     return this.proveedorService.remove(id);
   }
+
+  @Put(':id')
+  updateProveedor(@Param('id') id: string, @Body() createProveedorDto: CreateProveedorDto) {
+    return this.proveedorService.updateProveedor(id, createProveedorDto);
+  }
 }
