@@ -16,7 +16,10 @@ export class ProveedorService {
     const { nombre, telefono, descripcion, correo, clienteId } = CreateProveedorDto;
 
     if (!CreateProveedorDto) {
-      throw new BadRequestException("Favor de ingresar los datos requeridos");
+      return {
+        estado: "Error al crear el proveedor",
+        data: [],
+      }
     }
     try {
       const proveedor = new this.proveedorModel({
@@ -32,11 +35,16 @@ export class ProveedorService {
         proveedor: data._id,
       });
       return {
+        success: true,
         estado: "Proveedor creado exitosamente",
         data: data,
       };
     } catch (error) {
-      throw new BadRequestException("Error al crear el proveedor");
+      return {
+        success: false,
+        estado: "Error al crear el proveedor",
+        data: error.message,
+      }
     }
   }
 
@@ -44,11 +52,16 @@ export class ProveedorService {
     try {
       const proveedor = await this.proveedorModel.find();
       return {
+        success: true,
         estado: "Proveedores encontrados",
         data: proveedor,
       };
     } catch (error) {
-      throw new BadRequestException("Error al encontrar los proveedores");
+      return {
+        success: false,
+        estado: "Error al encontrar los proveedores",
+        data: error.message,
+      }
     }
   }
 
@@ -56,11 +69,16 @@ export class ProveedorService {
     try {
       const proveedor = await this.proveedorModel.find({ clienteId: id });
       return {
+        success: true,
         estado: "Tus proveedores encontrados",
         data: proveedor,
       };
     } catch (error) {
-      throw new BadRequestException("Error al encontrar tus proveedores");
+      return {
+        success: false,
+        estado: "Error al encontrar tus proveedores",
+        data: error.message,
+      }
     }
   }
 
@@ -74,12 +92,17 @@ export class ProveedorService {
         };
       }
       const res = {
+        success: true,
         estado: 'Proveedor actualizado exitosamente',
         data: updateProveedor,
       };
       return res;
     } catch (error) {
-      throw new BadRequestException("Error al actualizar el proveedor");
+      return {
+        success: false,
+        estado: 'Error al actualizar el proveedor',
+        data: error.message,
+      }
     }
   }
 
@@ -88,11 +111,13 @@ export class ProveedorService {
       const proveedor = await this.proveedorModel.findByIdAndDelete(id);
       return {
         success: true,
+        estado: "Proveedor eliminado exitosamente",
         data: proveedor,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al eliminar el proveedor",
         data: error.message,
       };
     }

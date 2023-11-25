@@ -21,11 +21,13 @@ export class RegistroService {
       const registros = await this.registroModel.find().sort({ createdAt: -1 }).limit(5);
       return {
         success: true,
+        estado: "Registros encontrados",
         data: registros,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los registros",
         data: error.message,
       };
     }
@@ -76,11 +78,13 @@ export class RegistroService {
 
       return {
         success: true,
+        estado: "Registros encontrados",
         data: registros,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los registros",
         data: error.message,
       };
     }
@@ -108,11 +112,13 @@ export class RegistroService {
       ]);
       return {
         success: true,
+        estado: "Registros encontrados",
         data: registros,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los registros",
         data: error.message,
       };
     }
@@ -166,11 +172,13 @@ export class RegistroService {
 
       return {
         success: true,
+        estado: "Registros encontrados",
         data: registros,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los registros",
         data: error.message,
       };
     }
@@ -216,11 +224,13 @@ export class RegistroService {
 
       return {
         success: true,
+        estado: "Registros encontrados",
         data: registros,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los registros",
         data: error.message,
       };
     }
@@ -277,11 +287,13 @@ export class RegistroService {
 
       return {
         success: true,
+        estado: "Registros encontrados",
         data: result,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los registros",
         data: error.message,
       };
     }
@@ -298,11 +310,13 @@ export class RegistroService {
       }
       return {
         success: true,
+        estado: "Registro creado exitosamente",
         data: data,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al crear el registro",
         data: error.message,
       };
     }

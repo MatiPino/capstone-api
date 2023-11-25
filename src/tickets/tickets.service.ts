@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { Usuario } from 'src/usuario/interfaces/usuario.interface';
 import { Ticket } from './interface/tickets.interface';
@@ -16,13 +16,21 @@ export class TicketsService {
     const { ticketsID, asunto, descripcion, estado, usuarioID, adminID, archivo } = createTicketDto;
   
     if (!Types.ObjectId.isValid(usuarioID)) {
-      throw new BadRequestException('Favor de ingresar un ID válido');
+      return {
+        succeess: false,
+        estado: 'Error al crear el ticket',
+        data: 'UsuarioID no válido',
+      }
     }
   
     const usuario = await this.usuarioModel.findById(usuarioID)
   
     if (!usuario) {
-      throw new BadRequestException('El usuario no existe');
+      return {
+        succeess: false,
+        estado: 'Error al crear el ticket',
+        data: 'Usuario no encontrado',
+      }
     }
   
     try {
@@ -38,12 +46,17 @@ export class TicketsService {
       await ticket.save();
       
       return {
+        succeess: true,
         estado: 'Ticket creado exitosamente',
         data: ticket,
       };
     } catch (error) {
       console.log(error);
-      throw new BadRequestException("Error al crear el ticket");
+      return {
+        succeess: false,
+        estado: 'Error al crear el ticket',
+        data: error.message,
+      }
     }
     
   }
@@ -53,15 +66,23 @@ export class TicketsService {
       const data = await this.ticketModel.find();
       
       if (data.length === 0) {
-        throw new BadRequestException("No hay tickets");
+        return {
+          estado: 'No hay tickets',
+          data: [],
+        }
       }
   
       return {
+        success: true,
         estado: 'Tickets encontrados',
         data,
       };
     } catch (error) {
-      throw new BadRequestException("Error al buscar los tickets");
+      return {
+        success: false,
+        estado: 'Error al buscar los tickets',
+        data: error.message,
+      }
     }
   }
 
@@ -70,15 +91,24 @@ export class TicketsService {
       const data = await this.ticketModel.find({ usuarioID });
       
       if (data.length === 0) {
-        throw new BadRequestException("No hay tickets");
+        return {
+          success: false,
+          estado: 'No hay tickets',
+          data: [],
+        }
       }
   
       return {
+        success: true,
         estado: 'Tickets encontrados',
         data,
       };
     } catch (error) {
-      throw new BadRequestException("Error al buscar los tickets");
+      return {
+        success: false,
+        estado: 'Error al buscar los tickets',
+        data: error.message,
+      }
     }
   }
 

@@ -48,16 +48,7 @@ export class ProductoController {
   updateProducto(@Body() createProductoDTO: CreateProductoDto, @Param("id") id) {
     return this.productoService.updateProducto(id, createProductoDTO);
   }
-
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateProductoDto: CreateProductoDto) {
-    return this.productoService.update(id, updateProductoDto);
-  }
-
-  // @Delete(":id")
-  // remove(@Param("id") id: string) {
-  //   return this.productoService.remove(id);
-  // }
+  
   @Delete(":id/:idComercio")
   remove(@Param("id") id: string, @Param("idComercio") idComercio: string) {
     return this.productoService.remove(id, idComercio);

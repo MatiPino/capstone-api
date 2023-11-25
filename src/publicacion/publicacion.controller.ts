@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Param } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Param, Put } from '@nestjs/common';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
 import { PublicacionService } from './publicacion.service';
 
@@ -21,8 +21,13 @@ export class PublicacionController {
         return this.publicacionService.findById(id);
     }
 
-    @Delete(':id')
-    remove(@Body('id') id: string) {
+    @Delete(":id")
+    remove(@Param("id") id: string) {
         return this.publicacionService.remove(id);
+    }
+
+    @Put(':id')
+    update(@Param('id') id: string, @Body() updatePublicacionDto: CreatePublicacionDto) {
+        return this.publicacionService.updatePublicacion(id, updatePublicacionDto);
     }
 }

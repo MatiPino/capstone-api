@@ -51,6 +51,7 @@ export class UsuarioService {
 
       return {
         success: true,
+        estado: "Usuario creado exitosamente",
         data: usuario,
       };
     } catch (error) {
@@ -58,12 +59,14 @@ export class UsuarioService {
       if (code === 11000) {
         return {
           success: false,
+          estado: "Error al crear el usuario",
           data: { error: "Este campo ya existe", value: error.keyValue },
         };
       }
 
       return {
         success: false,
+        estado: "Error al crear el usuario",
         data: error.message,
       };
     }
@@ -74,11 +77,13 @@ export class UsuarioService {
       const data = await this.usuarioModel.create(body);
       return {
         success: true,
+        estado: "Usuario creado exitosamente",
         data: data,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al crear el usuario",
         data: error.message,
       };
     }
@@ -89,11 +94,13 @@ export class UsuarioService {
       const usuarios = await this.usuarioModel.find().populate("rol", "-usuarios");
       return {
         success: true,
+        estado: "Usuarios encontrados",
         data: usuarios,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los usuarios",
         data: error.message,
       };
     }
@@ -108,11 +115,13 @@ export class UsuarioService {
 
       return {
         success: true,
+        estado: "Imagen encontrada",
         data: usuario,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener la imagen",
         data: error.message,
       };
     }
@@ -121,9 +130,17 @@ export class UsuarioService {
   async getUsuario(usuarioID: string) {
     try {
       const usuario = await this.usuarioModel.findById(usuarioID).populate("rol", "-usuarios");
-      return { success: true, data: usuario };
+      return { 
+        success: true,
+        estado: "Usuario encontrado", 
+        data: usuario 
+      };
     } catch (error) {
-      return { success: false, data: error.message };
+      return { 
+        success: false,
+        estado: "Error al obtener el usuario", 
+        data: error.message 
+      };
     }
   }
 
@@ -131,6 +148,7 @@ export class UsuarioService {
     const usuario = new this.usuarioModel(CreateUsuarioDto);
     return await usuario.save();
   }
+  
   async updateUsuario(createUsuarioDto: CreateUsuarioDto) {
     try {
       // const rol = await this.rolModel.findOne({ rol: createUsuarioDto.rol }).select("rol").exec();
@@ -143,12 +161,14 @@ export class UsuarioService {
       }
       const res = {
         success: true,
+        estado: "Usuario actualizado exitosamente",
         data: updatedUsuario,
       };
       return res;
     } catch (error) {
       return {
         success: false,
+        estado: "Error al actualizar el usuario",
         data: error.message,
       };
     }
@@ -162,11 +182,13 @@ export class UsuarioService {
       const datax = await data.deleteOne();
       return {
         success: true,
+        estado: "Usuario eliminado exitosamente",
         data: datax,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al eliminar el usuario",
         data: error.message,
       };
     }

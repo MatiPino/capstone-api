@@ -23,11 +23,13 @@ export class ProductoService {
       const producto = await this.productoModel.find();
       return {
         success: true,
+        estado: "Productos encontrados",
         data: producto,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los productos",
         data: error.message,
       };
     }
@@ -39,6 +41,7 @@ export class ProductoService {
       if (typeof decodedToken === "string") {
         return {
           success: false,
+          estado: "Error al obtener los productos",
           data: [],
         };
       }
@@ -46,11 +49,13 @@ export class ProductoService {
       const producto = await this.productoModel.find({ comercio: comercio }).populate("comercio", "nombre _id").exec();
       return {
         success: true,
+        estado: "Productos encontrados",
         data: producto,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los productos",
         data: error.message,
       };
     }
@@ -62,16 +67,19 @@ export class ProductoService {
       if (!producto) {
         return {
           success: false,
+          estado: "Producto no encontrado",
           data: [],
         };
       }
       return {
         success: true,
+        estado: "Producto encontrado",
         data: producto,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener el producto",
         data: error.message,
       };
     }
@@ -81,11 +89,13 @@ export class ProductoService {
       const producto = await this.productoModel.findOne({ codigo_barra: id });
       return {
         success: true,
+        estado: "Producto encontrado",
         data: producto,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener el producto",
         data: error.message,
       };
     }
@@ -105,11 +115,13 @@ export class ProductoService {
       await this.comercioModel.findByIdAndUpdate(comercio, { $push: { productos: data._id } });
       return {
         success: true,
+        estado: "Producto creado exitosamente",
         data: data,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al crear el producto",
         data: error.message,
       };
     }
@@ -130,11 +142,13 @@ export class ProductoService {
       await this.comercioModel.findByIdAndUpdate(comercio, { $push: { productos: data._id } });
       return {
         success: true,
+        estado: "Producto creado exitosamente",
         data: data,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al crear el producto",
         data: error.message,
       };
     }
@@ -147,25 +161,23 @@ export class ProductoService {
       if (!updatedProducto) {
         return {
           success: false,
+          estado: "No se encontró el producto",
           data: [],
         };
       }
       const res = {
         success: true,
+        estado: "Producto actualizado exitosamente",
         data: updatedProducto,
       };
       return res;
     } catch (error) {
       return {
         success: false,
+        estado: "Error al actualizar el producto",
         data: error.message,
       };
     }
-  }
-
-  async update(id: string, updateProductoDto: UpdateProductoDto) {
-    try {
-    } catch (error) {}
   }
 
   async remove(id: string, comercio) {
@@ -184,17 +196,20 @@ export class ProductoService {
       if (!comercioEncontrado) {
         return {
           success: false,
+          estado: "Comercio no encontrado",
           data: [],
         };
       }
 
       return {
         success: true,
+        estado: "Producto eliminado exitosamente",
         data,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al eliminar el producto",
         data: error.message,
       };
     }

@@ -26,6 +26,7 @@ export class RolService {
 
       return {
         success: true,
+        estado: "Rol creado exitosamente",
         data: data,
       };
     } catch (error) {
@@ -33,11 +34,13 @@ export class RolService {
       if (code === 11000) {
         return {
           success: false,
+          estado: "Error al crear el rol",
           data: "El rol ya existe",
         };
       }
       return {
         success: false,
+        estado: "Error al crear el rol",
         data: error.message,
       };
     }
@@ -48,11 +51,13 @@ export class RolService {
       const rol = await this.rolModel.find();
       return {
         success: true,
+        estado: "Roles encontrados",
         data: rol,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los roles",
         data: error.message,
       };
     }
@@ -63,11 +68,13 @@ export class RolService {
       const rol = await this.rolModel.findById(id).populate("rol");
       return {
         success: true,
+        estado: "Rol encontrado",
         data: rol,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener el rol",
         data: error.message,
       };
     }
@@ -91,11 +98,13 @@ export class RolService {
       const data = await Promise.all(dataPromises);
       return {
         success: true,
+        estado: "Usuarios encontrados",
         data: data,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los usuarios",
         data: error.message,
       };
     }
@@ -152,11 +161,13 @@ export class RolService {
 
       return {
         success: true,
+        estado: "Usuarios encontrados",
         data: rol,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los usuarios",
         data: error.message,
       };
     }
@@ -216,37 +227,18 @@ export class RolService {
 
       return {
         success: true,
+        estado: "Usuarios encontrados",
         data: rol,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al obtener los usuarios",
         data: error.message,
       };
     }
   }
 
-  // async todosUsuarios() {
-  //   try {
-  //     const rol = await this.rolModel
-  //       .find({ rol: { $ne: "admin" } })
-  //       .populate({
-  //         path: "usuarios",
-  //         model: "Usuario",
-  //         populate: { path: "autentificacion", model: "Autenticacion" },
-  //         select: "_id nombre apellido rol correo autentificacion",
-  //       });
-  //     return {
-  //       success: true,
-  //       data: rol,
-  //     };
-  //   } catch (error) {
-  //     return {
-  //       success: false,
-  //       data: error.message,
-  //     };
-  //   }
-  // }
 
   update(id: number, updateRolDto: UpdateRolDto) {
     return `This action updates a #${id} rol`;

@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { CreatePublicacionDto } from "./dto/create-publicacion.dto";
-import { UpdatePublicacionDto } from "./dto/update-publicacion.dto";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Publicacion } from "./interfaces/publicacion.interface";
@@ -23,15 +22,21 @@ export class PublicacionService {
     } catch (error) {
       return {
         success: false,
+        estado: 'Error al obtener las publicaciones',
         data: error.message,
-      };
+      }
     }
   }
 
   async findById(id: string) {
     try {
-      // const publicacion = await this.publicacionModel.findById(id);
-      const publicacion = await this.usuarioModel.findById(id).populate("publicacion").select("publicacion").exec();
+      const publicacion = await this.publicacionModel.find({proveedorId: id});
+      if (!publicacion) {
+        return {
+          estado: "No se encontraron publicaciones del usuario",
+          data: [],
+        };
+      }
       return {
         success: true,
         data: publicacion,
@@ -39,8 +44,9 @@ export class PublicacionService {
     } catch (error) {
       return {
         success: false,
+        estado: 'Error al obtener las publicaciones',
         data: error.message,
-      };
+      }
     }
   }
 
@@ -50,8 +56,8 @@ export class PublicacionService {
       const usuario = await this.usuarioModel.findById(proveedorId);
       if (!usuario) {
         return {
-          success: false,
-          data: "El proveedor no existe",
+          estado: "No se encontró el proveedor",
+          data: [],
         };
       }
       const publicacion = new this.publicacionModel({
@@ -64,25 +70,58 @@ export class PublicacionService {
       });
       const data = await publicacion.save();
       await usuario.updateOne({ $push: { publicacion: data._id } });
-      // await this.usuarioModel.findByIdAndUpdate(proveedorId, { $push: { publicacion: data._id } });
       return {
         success: true,
+        estado: "Publicación creada exitosamente",
         data: data,
       };
     } catch (error) {
       return {
         success: false,
+        estado: "Error al crear la publicación",
         data: error.message,
-      };
+      }
     }
   }
 
-  async update(id: string, updatePublicacionDto: UpdatePublicacionDto) {
+  async updatePublicacion(id: string, CreatePublicacionDto: CreatePublicacionDto) {
     try {
-    } catch (error) {}
+      const updatePublicacion = await this.publicacionModel.findByIdAndUpdate(id, { ...CreatePublicacionDto }, { new: true });
+      if (!updatePublicacion) {
+        return {
+          estado: 'No se encontró la publicación',
+          data: [],
+        };
+      }
+      const res = {
+        success: true,
+        estado: 'Publicación actualizada exitosamente',
+        data: updatePublicacion,
+      };
+      return res;
+    } catch (error) {
+      return {
+        success: false,
+        estado: 'Error al actualizar la publicación',
+        data: error.message,
+      }
+    }
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} publicacion`;
+  async remove(id: string) {
+    try {
+      const publicacion = await this.publicacionModel.findByIdAndDelete(id);
+      return {
+        success: true,
+        estado: 'Publicación eliminada exitosamente',
+        data: publicacion,
+      };
+    } catch (error) {
+        return {
+          success: false,
+          estado: 'Error al eliminar la publicación',
+          data: error.message,
+        }
+    }
   }
 }

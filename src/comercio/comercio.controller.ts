@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } from "@nestjs/common";
 import { ComercioService } from "./comercio.service";
 import { CreateComercioDto } from "./dto/create-comercio.dto";
-import { UpdateComercioDto } from "./dto/update-comercio.dto";
 import { JwtAuthGuard } from "src/autenticacion/guards/auth.guard";
 
 @Controller("comercio")
@@ -33,13 +32,13 @@ export class ComercioController {
     return this.comercioService.findProductos(id);
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateComercioDto: UpdateComercioDto) {
-    return this.comercioService.update(+id, updateComercioDto);
-  }
-
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.comercioService.remove(+id);
-  }
+    remove(@Param("id") id: string) {
+        return this.comercioService.remove(id);
+    }
+
+    @Put(':id')
+    update(@Param('id') id: string, @Body() updateComercioDto: CreateComercioDto) {
+        return this.comercioService.updateComercio(id, updateComercioDto);
+    }
 }
