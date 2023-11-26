@@ -1,33 +1,32 @@
-import { Body, Controller, Delete, Get, Post, Param, Put } from '@nestjs/common';
-import { CreatePublicacionDto } from './dto/create-publicacion.dto';
-import { PublicacionService } from './publicacion.service';
+import { Body, Controller, Delete, Get, Post, Param, Put } from "@nestjs/common";
+import { CreatePublicacionDto } from "./dto/create-publicacion.dto";
+import { PublicacionService } from "./publicacion.service";
 
-@Controller('publicacion')
+@Controller("publicacion")
 export class PublicacionController {
-    constructor(private readonly publicacionService: PublicacionService) {}
-    
-    @Post()
-    create(@Body() createPublicacionDto: CreatePublicacionDto) {
-        return this.publicacionService.crear(createPublicacionDto);
-    }
-    
-    @Get()
-    findAll() {
-        return this.publicacionService.findAll();
-    }
+  constructor(private readonly publicacionService: PublicacionService) {}
 
-    @Get(":id")
-    findOne(@Param("id") id: string) {
-        return this.publicacionService.findById(id);
-    }
+  @Post()
+  create(@Body() createPublicacionDto: CreatePublicacionDto) {
+    return this.publicacionService.crear(createPublicacionDto);
+  }
 
-    @Delete(":id")
-    remove(@Param("id") id: string) {
-        return this.publicacionService.remove(id);
-    }
+  @Put(":id")
+  update(@Param("id") id: string, @Body() updatePublicacionDto: CreatePublicacionDto) {
+    return this.publicacionService.updatePublicacion(id, updatePublicacionDto);
+  }
+  @Get()
+  findAll() {
+    return this.publicacionService.findAll();
+  }
 
-    @Put(':id')
-    update(@Param('id') id: string, @Body() updatePublicacionDto: CreatePublicacionDto) {
-        return this.publicacionService.updatePublicacion(id, updatePublicacionDto);
-    }
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.publicacionService.findById(id);
+  }
+
+  @Delete(":id")
+  remove(@Body("id") id: string) {
+    return this.publicacionService.remove(id);
+  }
 }
