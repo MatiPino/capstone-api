@@ -25,6 +25,16 @@ export class PublicacionController {
     return this.publicacionService.findById(id);
   }
 
+  @Get("buscar/categorias")
+  findAllCategorias() {
+    return this.publicacionService.findAllCategorias();
+  }
+
+  @Get("categoria/:categoria")
+  bucarPorCategorias(@Param("categoria") categoria: string) {
+    return this.publicacionService.buscarPorCategoria(categoria);
+  }
+
   @Delete(":id")
   remove(@Body("id") id: string) {
     return this.publicacionService.remove(id);

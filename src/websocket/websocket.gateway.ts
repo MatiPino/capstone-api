@@ -45,6 +45,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
   @SubscribeMessage("venderProducto")
   venderProducto(client: any, payload: any): string {
+    console.log({ payload });
     this.server.emit("venderProducto", payload);
     return payload;
   }

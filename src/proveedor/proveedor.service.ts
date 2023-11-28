@@ -19,7 +19,7 @@ export class ProveedorService {
       return {
         estado: "Error al crear el proveedor",
         data: [],
-      }
+      };
     }
     try {
       const proveedor = new this.proveedorModel({
@@ -44,7 +44,7 @@ export class ProveedorService {
         success: false,
         estado: "Error al crear el proveedor",
         data: error.message,
-      }
+      };
     }
   }
 
@@ -61,7 +61,7 @@ export class ProveedorService {
         success: false,
         estado: "Error al encontrar los proveedores",
         data: error.message,
-      }
+      };
     }
   }
 
@@ -78,7 +78,7 @@ export class ProveedorService {
         success: false,
         estado: "Error al encontrar tus proveedores",
         data: error.message,
-      }
+      };
     }
   }
 
@@ -87,22 +87,22 @@ export class ProveedorService {
       const updateProveedor = await this.proveedorModel.findByIdAndUpdate(id, { ...CreateProveedorDto }, { new: true });
       if (!updateProveedor) {
         return {
-          estado: 'No se encontró el proveedor',
+          estado: "No se encontró el proveedor",
           data: [],
         };
       }
       const res = {
         success: true,
-        estado: 'Proveedor actualizado exitosamente',
+        estado: "Proveedor actualizado exitosamente",
         data: updateProveedor,
       };
       return res;
     } catch (error) {
       return {
         success: false,
-        estado: 'Error al actualizar el proveedor',
+        estado: "Error al actualizar el proveedor",
         data: error.message,
-      }
+      };
     }
   }
 

@@ -7,7 +7,7 @@ import { Payload } from "src/.interfaces/payload.interface";
 import { JwtAuthGuard } from "src/autenticacion/guards/auth.guard";
 
 @Controller("producto")
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class ProductoController {
   constructor(
     private readonly productoService: ProductoService,
@@ -37,18 +37,29 @@ export class ProductoController {
 
   @Get(":id/:idComercio")
   findOneByComercio(@Param("id") id: string, @Param("idComercio") idComercio: string) {
+    console.log("ESTO");
     return this.productoService.findOneByComercio(id, idComercio);
   }
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.productoService.findOne(id);
   }
+  @Get("buscar/codigoBarra/:codigoBarra")
+  findByCodigoBarra(@Param("codigoBarra") codigoBarra: string) {
+    console.log(codigoBarra);
+    return this.productoService.findByCodigoBarra(codigoBarra);
+  }
 
   @Put(":id")
   updateProducto(@Body() createProductoDTO: CreateProductoDto, @Param("id") id) {
     return this.productoService.updateProducto(id, createProductoDTO);
   }
-  
+
+  @Put("actualizar/stock")
+  actualizarStock(@Body() body: any) {
+    return this.productoService.actualizarStock(body);
+  }
+
   @Delete(":id/:idComercio")
   remove(@Param("id") id: string, @Param("idComercio") idComercio: string) {
     return this.productoService.remove(id, idComercio);

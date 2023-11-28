@@ -100,8 +100,34 @@ export class ProductoService {
       };
     }
   }
+  async findByCodigoBarra(codigoBarra: string) {
+    console.log(codigoBarra);
+    try {
+      const data = await this.productoModel.findOne({ codigo_barra: codigoBarra }).select("-imagenes");
+      if (!data) {
+        return {
+          success: false,
+          estado: "Producto no encontrado",
+          data: [],
+        };
+      }
+      return {
+        success: true,
+        estado: "Producto encontrado",
+        data: data,
+      };
+    } catch (error) {
+      console.log("ERROR");
+      return {
+        success: false,
+        estado: "Error al obtener el producto",
+        data: error.message,
+      };
+    }
+  }
 
   async create(createProductoDTO: CreateProductoDto) {
+    console.log(createProductoDTO);
     const { codigo_barra, comercio, nombre, precio, proveedor, imagenes } = createProductoDTO;
     try {
       const producto = new this.productoModel({
@@ -170,6 +196,40 @@ export class ProductoService {
         estado: "Producto actualizado exitosamente",
         data: updatedProducto,
       };
+      return res;
+    } catch (error) {
+      return {
+        success: false,
+        estado: "Error al actualizar el producto",
+        data: error.message,
+      };
+    }
+  }
+  async actualizarStock(body: any) {
+    console.log(body);
+    const { productos } = body;
+    const res = {
+      success: true,
+      estado: "Error al actualizar el producto",
+      data: [],
+    };
+
+    try {
+      for (const { _id, cantidad } of productos) {
+        const updatedProducto = await this.productoModel.findByIdAndUpdate(_id, { cantidad: cantidad }, { new: true });
+        console.log(updatedProducto);
+        if (!updatedProducto) {
+          return {
+            success: false,
+            estado: "No se encontró el producto",
+            data: [],
+          };
+        }
+        res.success = true;
+        res.estado = "Producto actualizado exitosamente";
+        res.data.push(updatedProducto);
+      }
+
       return res;
     } catch (error) {
       return {

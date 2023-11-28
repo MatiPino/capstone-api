@@ -14,7 +14,9 @@ export class PublicacionService {
 
   async findAll() {
     try {
-      const publicacion = await this.publicacionModel.find();
+      const publicacion = await this.publicacionModel.find().populate({ path: "proveedor", select: "nombre apellido correo" });
+      const publicacionPrueba = await this.publicacionModel.find();
+      console.log(publicacionPrueba);
       return {
         success: true,
         data: publicacion,
@@ -22,15 +24,15 @@ export class PublicacionService {
     } catch (error) {
       return {
         success: false,
-        estado: 'Error al obtener las publicaciones',
+        estado: "Error al obtener las publicaciones",
         data: error.message,
-      }
+      };
     }
   }
 
   async findById(id: string) {
     try {
-      const publicacion = await this.publicacionModel.find({proveedorId: id});
+      const publicacion = await this.publicacionModel.find({ proveedor: id });
       if (!publicacion) {
         return {
           estado: "No se encontraron publicaciones del usuario",
@@ -44,16 +46,55 @@ export class PublicacionService {
     } catch (error) {
       return {
         success: false,
-        estado: 'Error al obtener las publicaciones',
+        estado: "Error al obtener las publicaciones",
         data: error.message,
+      };
+    }
+  }
+
+  async buscarPorCategoria(categoria: string) {
+    try {
+      const publicacion = await this.publicacionModel.find({ categoria: categoria });
+      if (!publicacion) {
+        return {
+          estado: "No se encontraron publicaciones de la categoria",
+          data: [],
+        };
       }
+      return {
+        success: true,
+        data: publicacion,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        estado: "Error al obtener las publicaciones",
+        data: error.message,
+      };
+    }
+  }
+
+  async findAllCategorias() {
+    try {
+      const categorias = await this.publicacionModel.find().select("categoria").distinct("categoria");
+      return {
+        success: true,
+        estado: "Categorias encontradas",
+        data: categorias,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        estado: "Error al obtener las categorias",
+        data: error.message,
+      };
     }
   }
 
   async crear(createPublicacionDto: CreatePublicacionDto) {
-    const { nombre, precio, codigo_barra, categoria, imagen, proveedorId } = createPublicacionDto;
+    const { nombre, precio, codigo_barra, categoria, imagen, proveedor } = createPublicacionDto;
     try {
-      const usuario = await this.usuarioModel.findById(proveedorId);
+      const usuario = await this.usuarioModel.findById(proveedor);
       if (!usuario) {
         return {
           estado: "No se encontró el proveedor",
@@ -66,7 +107,7 @@ export class PublicacionService {
         codigo_barra,
         categoria,
         imagen,
-        proveedorId,
+        proveedor,
       });
       const data = await publicacion.save();
       await usuario.updateOne({ $push: { publicacion: data._id } });
@@ -80,7 +121,7 @@ export class PublicacionService {
         success: false,
         estado: "Error al crear la publicación",
         data: error.message,
-      }
+      };
     }
   }
 
@@ -89,22 +130,22 @@ export class PublicacionService {
       const updatePublicacion = await this.publicacionModel.findByIdAndUpdate(id, { ...CreatePublicacionDto }, { new: true });
       if (!updatePublicacion) {
         return {
-          estado: 'No se encontró la publicación',
+          estado: "No se encontró la publicación",
           data: [],
         };
       }
       const res = {
         success: true,
-        estado: 'Publicación actualizada exitosamente',
+        estado: "Publicación actualizada exitosamente",
         data: updatePublicacion,
       };
       return res;
     } catch (error) {
       return {
         success: false,
-        estado: 'Error al actualizar la publicación',
+        estado: "Error al actualizar la publicación",
         data: error.message,
-      }
+      };
     }
   }
 
@@ -113,15 +154,15 @@ export class PublicacionService {
       const publicacion = await this.publicacionModel.findByIdAndDelete(id);
       return {
         success: true,
-        estado: 'Publicación eliminada exitosamente',
+        estado: "Publicación eliminada exitosamente",
         data: publicacion,
       };
     } catch (error) {
-        return {
-          success: false,
-          estado: 'Error al eliminar la publicación',
-          data: error.message,
-        }
+      return {
+        success: false,
+        estado: "Error al eliminar la publicación",
+        data: error.message,
+      };
     }
   }
 }
