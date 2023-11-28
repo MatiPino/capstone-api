@@ -16,9 +16,9 @@ export class RegistroService {
     @InjectModel("Producto") private readonly productoModel: Model<Producto>
   ) {}
 
-  async ultimosRegistros() {
+  async ultimosRegistros(comercioId: string) {
     try {
-      const registros = await this.registroModel.find().sort({ createdAt: -1 }).limit(5);
+      const registros = await this.registroModel.find({id: comercioId}).sort({ createdAt: -1 }).limit(5);
       return {
         success: true,
         estado: "Registros encontrados",

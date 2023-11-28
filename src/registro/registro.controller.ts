@@ -23,8 +23,8 @@ export class RegistroController {
   }
 
   @Get("ultimosRegistros")
-  ultimosRegistros() {
-    return this.registroService.ultimosRegistros();
+  ultimosRegistros( @Param("id") comercioId: string) {
+    return this.registroService.ultimosRegistros(comercioId);
   }
 
   @Get("productosVendidosMes")

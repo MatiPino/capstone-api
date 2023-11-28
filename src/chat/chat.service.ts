@@ -58,9 +58,7 @@ export class ChatService {
       
       if (data.length === 0) {
         if (emisorID) {
-          return { 
-            estado: `No hay chats con el ID de usuario ${emisorID}` 
-          };
+          throw new BadRequestException(`No se encontró ningún chat para el emisor con ID ${emisorID}`);
         } else {
           return { 
             estado: 'No hay chats' 
@@ -73,10 +71,7 @@ export class ChatService {
         data: data,
       };
     } catch (error) {
-      return {
-        estado: 'Error al buscar los chats',
-        error: error,
-      }
+      throw new BadRequestException("Error al buscar los chats");
     }
   }
 
