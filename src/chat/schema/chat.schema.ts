@@ -2,6 +2,7 @@ import { Schema } from "mongoose";
 
 export const ChatSchema = new Schema({
     chatID: { type: String, required: true, unique: true },
+    favorito: { type: Boolean, default: false },
     mensajes: [
         {
             emisorID: { type: String, required: true },

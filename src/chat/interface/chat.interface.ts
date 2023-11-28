@@ -9,5 +9,6 @@ export interface ChatMessage {
   
   export interface Chat extends Document {
     chatID: string;
+    favorito: boolean;
     mensajes: ChatMessage[];
   }

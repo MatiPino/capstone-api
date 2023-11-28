@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 
@@ -21,8 +21,15 @@ export class ChatController {
     return this.chatService.traerChatID(id);
   }
 
+  
+  @Put(':usuarioID/favorito')
+  async marcarChatComoFavorito(@Param('usuarioID') chatID: string, @Body('favorito') favorito: boolean) {
+    return this.chatService.marcarChatComoFavorito(chatID, favorito);
+  }
+
   @Get()
   traerTodos() {
     return this.chatService.traerTodos();
   }
+
 }
