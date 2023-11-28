@@ -130,16 +130,16 @@ export class UsuarioService {
   async getUsuario(usuarioID: string) {
     try {
       const usuario = await this.usuarioModel.findById(usuarioID).populate("rol", "-usuarios");
-      return { 
+      return {
         success: true,
-        estado: "Usuario encontrado", 
-        data: usuario 
+        estado: "Usuario encontrado",
+        data: usuario,
       };
     } catch (error) {
-      return { 
+      return {
         success: false,
-        estado: "Error al obtener el usuario", 
-        data: error.message 
+        estado: "Error al obtener el usuario",
+        data: error.message,
       };
     }
   }
@@ -148,7 +148,7 @@ export class UsuarioService {
     const usuario = new this.usuarioModel(CreateUsuarioDto);
     return await usuario.save();
   }
-  
+
   async updateUsuario(createUsuarioDto: CreateUsuarioDto) {
     try {
       // const rol = await this.rolModel.findOne({ rol: createUsuarioDto.rol }).select("rol").exec();
@@ -177,8 +177,8 @@ export class UsuarioService {
     try {
       console.log(id);
       const data = await this.usuarioModel.findById(id).exec();
-      const auth = await this.autenticacionModel.findByIdAndRemove(data.autentificacion).exec();
-      const rol = await this.rolModel.updateOne({ usuarios: id }, { $pull: { usuarios: id } }).exec();
+      await this.autenticacionModel.findByIdAndRemove(data.autentificacion, { lean: true });
+      await this.rolModel.updateOne({ usuarios: id }, { $pull: { usuarios: id } });
       const datax = await data.deleteOne();
       return {
         success: true,
@@ -193,5 +193,4 @@ export class UsuarioService {
       };
     }
   }
-
 }

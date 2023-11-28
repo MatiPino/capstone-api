@@ -8,24 +8,4 @@ export const AutenticacionSchema = new Schema({
   usuario: { type: Schema.Types.ObjectId, ref: "Usuario" },
 });
 
-AutenticacionSchema.pre("deleteOne", { document: true, query: false }, async function (next) {
-  try {
-    // Accede al ID del usuario asociado a la autenticación
-    const usuarioId = this.usuario;
-
-    // Utiliza el modelo directamente desde el inyector de dependencias de NestJS
-    const usuarioModel = model<Usuario>("Usuario", UsuarioSchema);
-
-    // Elimina el usuario asociado utilizando el modelo de Usuario
-    await usuarioModel.deleteOne({ _id: usuarioId });
-
-    // Llama al siguiente middleware
-    next();
-  } catch (error) {
-    console.error(error);
-    // Maneja cualquier error que pueda ocurrir durante la eliminación
-    next(error);
-  }
-});
-
 AutenticacionSchema.plugin(require("mongoose-bcrypt"));
