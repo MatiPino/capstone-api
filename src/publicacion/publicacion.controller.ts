@@ -24,6 +24,10 @@ export class PublicacionController {
   findOne(@Param("id") id: string) {
     return this.publicacionService.findById(id);
   }
+  @Get("filtro/:nombre/:categoria/:min/:max")
+  filtro(@Param("nombre") nombre: string, @Param("categoria") categoria: string, @Param("min") min: number, @Param("max") max: number) {
+    return this.publicacionService.filtro(nombre, categoria, min, max);
+  }
 
   @Get("buscar/categorias")
   findAllCategorias() {

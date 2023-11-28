@@ -52,6 +52,43 @@ export class PublicacionService {
     }
   }
 
+  async filtro(nombre: string | null, categoria: string | null, min: number | null, max: number | null) {
+    nombre = nombre == "0" ? null : nombre;
+    categoria = categoria == "0" ? null : categoria;
+    max = max == 0 || null ? 1000000000 : max;
+    console.log(nombre, categoria, min, max);
+
+    try {
+      const condicion = {};
+      if (nombre) {
+        condicion["nombre"] = { $regex: nombre, $options: "i" };
+      }
+      if (categoria) {
+        condicion["categoria"] = { $regex: categoria, $options: "i" };
+      }
+      if (min && max) {
+        condicion["precio"] = { $gte: min, $lte: max };
+      }
+      const publicacion = await this.publicacionModel.find(condicion).populate("proveedor");
+      if (!publicacion) {
+        return {
+          estado: "No se encontraron publicaciones",
+          data: [],
+        };
+      }
+      return {
+        success: true,
+        data: publicacion,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        estado: "Error al obtener las publicaciones",
+        data: error.message,
+      };
+    }
+  }
+
   async buscarPorCategoria(categoria: string) {
     try {
       const publicacion = await this.publicacionModel.find({ categoria: categoria });
