@@ -58,7 +58,9 @@ export class ChatService {
       
       if (data.length === 0) {
         if (emisorID) {
-          throw new BadRequestException(`No se encontró ningún chat para el emisor con ID ${emisorID}`);
+          return { 
+            estado: `No hay chats con el ID ${emisorID}` 
+          };
         } else {
           return { 
             estado: 'No hay chats' 
@@ -66,9 +68,16 @@ export class ChatService {
         }
       }
   
+      const chatsConEstadoFavorito = data.map((chat) => {
+        return {
+          ...chat._id,
+          favorito: chat.favorito || false,
+        };
+      });
+  
       return {
         estado: 'Chats encontrados',
-        data: data,
+        data: chatsConEstadoFavorito,
       };
     } catch (error) {
       throw new BadRequestException("Error al buscar los chats");
