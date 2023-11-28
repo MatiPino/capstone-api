@@ -7,6 +7,7 @@ export interface Ticket extends Document {
     estado: boolean;
     usuarioID: string;
     adminID?: string;
+    respuesta?: string;
     archivo?: string;
     createdAt: Date;
 }

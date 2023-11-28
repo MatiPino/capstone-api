@@ -18,7 +18,10 @@ export class CreateTicketDto {
     
     @IsOptional()
     adminID: string;
+
+    @IsOptional()
+    respuesta: string;
     
     @IsOptional()
-    archivo: Buffer;
+    archivo: string;
 }

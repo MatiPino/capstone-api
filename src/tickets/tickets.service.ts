@@ -61,10 +61,35 @@ export class TicketsService {
     
   }
 
-  async traerTodos() {
+  async traerTodos(estado: boolean) {
     try {
-      const data = await this.ticketModel.find();
+      const data = await this.ticketModel.find({estado});
       
+      if (data.length === 0) {
+        return {
+          estado: 'No hay tickets',
+          data: [],
+        }
+      }
+  
+      return {
+        success: true,
+        estado: 'Tickets encontrados',
+        data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        estado: 'Error al buscar los tickets',
+        data: error.message,
+      }
+    }
+  }
+
+  async traerEstado(usuarioID: string, estado: boolean) {
+    try {
+      const data = await this.ticketModel.find({ usuarioID, estado });
+  
       if (data.length === 0) {
         return {
           estado: 'No hay tickets',
@@ -107,6 +132,54 @@ export class TicketsService {
       return {
         success: false,
         estado: 'Error al buscar los tickets',
+        data: error.message,
+      }
+    }
+  }
+
+  async actualizarEstado(id: string, CreateTicketDto: CreateTicketDto) {
+    try {
+      const updateTicketEstado = await this.ticketModel.findByIdAndUpdate(id, { ...CreateTicketDto }, { new: true });
+      if (!updateTicketEstado) {
+        return {
+          estado: "No se encontró el ticket",
+          data: [],
+        };
+      }
+      const res = {
+        success: true,
+        estado: 'Estado actualizado',
+        data: updateTicketEstado,
+      };
+      return res;
+    } catch (error) {
+      return {
+        success: false,
+        estado: 'Error al actualizar el estado del ticket',
+        data: error.message,
+      }
+    }
+  }
+
+  async remove(id: string) {
+    try {
+      const ticket = await this.ticketModel.findByIdAndDelete(id);
+      if (!ticket) {
+        return {
+          success: false,
+          estado: 'No se encontró el ticket',
+          data: [],
+        };
+      }
+      return {
+        success: true,
+        estado: 'Ticket eliminado',
+        data: ticket,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        estado: 'Error al eliminar el ticket',
         data: error.message,
       }
     }

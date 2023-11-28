@@ -7,6 +7,7 @@ export const TicketSchema = new Schema({
     estado: { type: Boolean, required: true },
     usuarioID: { type: Schema.ObjectId, ref: "Usuario", required: true },
     adminID: { type: Schema.ObjectId, ref: "Usuario", required: false },
+    respuesta: { type: String, required: false },
     archivo: { type: String, required: false },
     createdAt: {
         type: Date,

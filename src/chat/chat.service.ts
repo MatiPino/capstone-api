@@ -33,8 +33,8 @@ export class ChatService {
         chat = new this.chatModel({ chatID, mensajes: [] });
       }
 
-      const mensajeConEmisor = { emisorID, mensaje, enviadoPorEmisor, createdAt: new Date() }; // REVISAR ESTO EN CASO DE ERROR
-      chat.mensajes.push(mensajeConEmisor); // ORIGINALMENTE SE PASABA TODO EN EL PUSH
+      const mensajeConEmisor = { emisorID, mensaje, enviadoPorEmisor, createdAt: new Date() };
+      chat.mensajes.push(mensajeConEmisor);
       await chat.save();
       
       return {
@@ -106,6 +106,36 @@ export class ChatService {
       throw new BadRequestException("Error al buscar los chats");
     }
   }
+
+  async marcarChatComoFavorito(chatID: string, favorito: boolean) {
+    if (!chatID) {
+      return {
+        success: false,
+        estado: 'Favor de ingresar un ID de chat válido',
+        data: null,
+      }
+    }
+  
+    const chat = await this.chatModel.findOne({ chatID });
+  
+    if (!chat) {
+      return {
+        success: false,
+        estado: 'El chat no existe',
+        data: null,
+      }
+    }
+  
+    chat.favorito = favorito;
+    await chat.save();
+  
+    return {
+      success: true,
+      estado: 'Chat actualizado exitosamente',
+      data: chat,
+    };
+}
+
 
 }
 

@@ -9,4 +9,5 @@ export class CreateUsuarioDto {
   apellido: string;
   @IsString()
   rol: string;
+
 }

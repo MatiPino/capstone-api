@@ -217,6 +217,7 @@ export class RolService {
             apellido: "$usuariosInfo.apellido",
             correo: "$usuariosInfo.correo",
             rut: "$autenticacion.rut",
+            favorito: "$usuariosInfo.favorito",
             autentificacion: {
               _id: "$autenticacion._id",
               rut: "$autenticacion.rut",

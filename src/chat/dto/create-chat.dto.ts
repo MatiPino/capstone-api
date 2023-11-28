@@ -1,16 +1,5 @@
 import { IsBoolean, IsString } from "class-validator";
 
-// export class CreateChatDto {
-//     @IsString()
-//     nombreEmisor: string;
-//     @IsString()
-//     emisorID: string;
-//     @IsString()
-//     receptorID: string;
-//     @IsString()
-//     mensaje: string;
-// }
-
 export class CreateChatDto {
     @IsString()
     emisorID: string;
@@ -23,4 +12,7 @@ export class CreateChatDto {
   
     @IsString()
     chatID: string;
+
+    @IsBoolean()
+    favorito: boolean;
   }
