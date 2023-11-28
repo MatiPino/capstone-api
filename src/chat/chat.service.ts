@@ -59,7 +59,7 @@ export class ChatService {
       if (data.length === 0) {
         if (emisorID) {
           return { 
-            estado: `No hay chats con el ID ${emisorID}` 
+            estado: `No hay chats con el ID de usuario ${emisorID}` 
           };
         } else {
           return { 
@@ -68,19 +68,15 @@ export class ChatService {
         }
       }
   
-      const chatsConEstadoFavorito = data.map((chat) => {
-        return {
-          ...chat._id,
-          favorito: chat.favorito || false,
-        };
-      });
-  
       return {
         estado: 'Chats encontrados',
-        data: chatsConEstadoFavorito,
+        data: data,
       };
     } catch (error) {
-      throw new BadRequestException("Error al buscar los chats");
+      return {
+        estado: 'Error al buscar los chats',
+        error: error,
+      }
     }
   }
 
