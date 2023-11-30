@@ -20,7 +20,7 @@ import { ConfigModule } from "@nestjs/config";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot("mongodb+srv://Matias:hnOVxwQB2aKAn5dD@ai-zi.skmfqrb.mongodb.net/capstone"),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     AutenticacionModule,
     UsuarioModule,
     RegistroModule,
