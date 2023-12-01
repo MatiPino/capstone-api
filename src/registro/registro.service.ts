@@ -91,8 +91,9 @@ export class RegistroService {
   }
 
   async productoVendidoMes() {
-    const primerDia = new Date();
-    primerDia.setDate(1);
+    const now = new Date();
+    const primerDia = new Date(new Date().getFullYear(), now.getMonth(), 1);
+    // primerDia.setDate(1);
     try {
       const registros = await this.registroModel.aggregate([
         { $match: { createdAt: { $gte: primerDia, $lte: new Date() } } },
@@ -110,6 +111,21 @@ export class RegistroService {
           $sort: { cantidadVendida: -1 },
         },
       ]);
+      console.log("======================================");
+      console.log(primerDia);
+      console.log("======================================");
+      console.log(new Date());
+      console.log(new Date().getFullYear());
+      console.log(new Date().getMonth());
+      console.log(new Date().getDate());
+      console.log("======================================");
+      console.log(now);
+      console.log(now.getFullYear());
+      console.log(now.getMonth());
+      console.log(now.getDate());
+      console.log("======================================");
+      console.log(registros);
+      console.log("======================================");
       return {
         success: true,
         estado: "Registros encontrados",
