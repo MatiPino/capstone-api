@@ -61,4 +61,11 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       this.server.emit("mensaje", payload);
     }
   }
+
+  @SubscribeMessage("stockBajo")
+  mensajeStock(payload: any) {
+    console.log(`Mensaje recibido de: ${payload.mensaje}`);
+    // Asegúrate de que el evento "mensaje" se emita solo una vez
+    this.server.emit("stockBajo", payload);
+  }
 }

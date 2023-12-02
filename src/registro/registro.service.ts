@@ -7,18 +7,20 @@ import { Registro } from "./Schema/registro.schema";
 import { Model } from "mongoose";
 import { Comercio } from "src/comercio/interfaces/comercio.interface";
 import { Producto } from "src/producto/interfaces/producto.interface";
+import { WsLogicaService } from "src/ws-logica/ws-logica.service";
 
 @Injectable()
 export class RegistroService {
   constructor(
     @InjectModel("Registro") private readonly registroModel: Model<Registro>,
     @InjectModel("Comercio") private readonly comercioModel: Model<Comercio>,
-    @InjectModel("Producto") private readonly productoModel: Model<Producto>
+    @InjectModel("Producto") private readonly productoModel: Model<Producto>,
+    private wss: WsLogicaService
   ) {}
 
   async ultimosRegistros(comercioId: string) {
     try {
-      const registros = await this.registroModel.find({id: comercioId}).sort({ createdAt: -1 }).limit(5);
+      const registros = await this.registroModel.find({ id: comercioId }).sort({ createdAt: -1 }).limit(5);
       return {
         success: true,
         estado: "Registros encontrados",
@@ -323,6 +325,7 @@ export class RegistroService {
         const productoDb = await this.productoModel.findById(producto.id);
         productoDb.cantidad = productoDb.cantidad - producto.cantidad;
         productoDb.save();
+        this.wss.stockBajo(productoDb);
       }
       return {
         success: true,
@@ -337,9 +340,6 @@ export class RegistroService {
       };
     }
   }
-
-  
-  
 
   async update(registro_id: number, updateRegistroDto: UpdateRegistroDto): Promise<Registro> {
     const updatedRegistro = await this.registroModel.findByIdAndUpdate(registro_id, CreateRegistroDto, { new: true });

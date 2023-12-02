@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { Socket } from "socket.io";
+import { WebsocketGateway } from "./websocket.gateway";
 
 @Injectable()
 export class WebsocketService {
   private clientesConectados = {};
-
   registrarCliente(cliente: Socket) {
     this.clientesConectados[cliente.id] = cliente;
   }

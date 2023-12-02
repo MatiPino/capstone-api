@@ -6,6 +6,9 @@ import { Mongoose } from "mongoose";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ComercioSchema } from "src/comercio/schema/comercio.schema";
 import { ProductoSchema } from "src/producto/Schema/producto.schema";
+import { WsLogicaService } from "src/ws-logica/ws-logica.service";
+import { WebsocketGateway } from "src/websocket/websocket.gateway";
+import { WebsocketService } from "src/websocket/websocket.service";
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -15,6 +18,6 @@ import { ProductoSchema } from "src/producto/Schema/producto.schema";
     ]),
   ],
   controllers: [RegistroController],
-  providers: [RegistroService],
+  providers: [RegistroService, WsLogicaService, WebsocketGateway, WebsocketService],
 })
 export class RegistroModule {}

@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePruebaDto } from './dto/create-prueba.dto';
-import { UpdatePruebaDto } from './dto/update-prueba.dto';
+import { Injectable } from "@nestjs/common";
+import { CreatePruebaDto } from "./dto/create-prueba.dto";
+import { UpdatePruebaDto } from "./dto/update-prueba.dto";
+import { WebsocketGateway } from "src/websocket/websocket.gateway";
 
 @Injectable()
 export class PruebaService {
+  constructor(private readonly wsg: WebsocketGateway) {}
   create(createPruebaDto: CreatePruebaDto) {
-    return 'This action adds a new prueba';
+    return "This action adds a new prueba";
   }
 
   findAll() {
