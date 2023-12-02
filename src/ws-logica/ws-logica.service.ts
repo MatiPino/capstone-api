@@ -12,11 +12,24 @@ export class WsLogicaService {
     if (cantidad < 5) {
       this.wsg.mensajeStock({
         data: {
+          success: false,
           cantidad,
           nombre,
         },
         mensaje: `El producto ${nombre} tiene pocas unidades en stock`,
       });
     }
+  }
+
+  actualizarStock(producto: Producto) {
+    const { cantidad, nombre } = producto;
+    this.wsg.mensajeStock({
+      data: {
+        success: true,
+        cantidad,
+        nombre,
+      },
+      mensaje: `Se ha repuesto el stock del producto ${nombre}`,
+    });
   }
 }

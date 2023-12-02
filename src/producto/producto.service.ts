@@ -9,13 +9,15 @@ import { Comercio } from "src/comercio/interfaces/comercio.interface";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { Payload } from "src/.interfaces/payload.interface";
+import { WsLogicaService } from "src/ws-logica/ws-logica.service";
 
 @Injectable()
 export class ProductoService {
   constructor(
     @InjectModel("Producto") private readonly productoModel: Model<Producto>,
     @InjectModel("Comercio") private readonly comercioModel: Model<Comercio>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private readonly wsLogicaService: WsLogicaService
   ) {}
 
   async findAll() {
@@ -182,8 +184,18 @@ export class ProductoService {
 
   async updateProducto(productoID: string, createProductoDto: CreateProductoDto) {
     try {
+      const producto = await this.productoModel.findById(productoID);
+      if (!producto) {
+        return {
+          success: false,
+          estado: "No se encontró el producto",
+          data: [],
+        };
+      }
       const updatedProducto = await this.productoModel.findByIdAndUpdate(productoID, createProductoDto, { new: true });
-
+      if (producto.cantidad <= 5) {
+        this.wsLogicaService.actualizarStock(updatedProducto);
+      }
       if (!updatedProducto) {
         return {
           success: false,
