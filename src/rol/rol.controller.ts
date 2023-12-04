@@ -24,26 +24,21 @@ export class RolController {
     return this.rolService.findAll();
   }
 
-  @Get("gestion")
-  @Rol(RolEnum.ADMIN)
-  findGestion() {
-    return this.rolService.todosUsuarios();
-  }
   @Get("chat")
   @Rol(RolEnum.ADMIN, RolEnum.CLIENTE, RolEnum.PROVEEDOR)
   chat(@Req() request: Request) {
     return this.rolService.chat(request);
   }
 
-  @Get(":id")
-  findOne(@Param("id") rol: string) {
+  @Get("usuarios/:rol")
+  findOne(@Param("rol") rol: string) {
     return this.rolService.todosRol(rol);
   }
 
-  @Get(":rol")
+  @Get("usuarios")
   @Rol(RolEnum.ADMIN)
-  findUsuarios(@Param("rol") rol: string) {
-    return this.rolService.todosRol(rol);
+  findUsuarios() {
+    return this.rolService.todosUsuarios();
   }
 
   @Patch(":id")

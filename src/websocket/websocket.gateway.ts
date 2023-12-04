@@ -10,22 +10,31 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
   afterInit(server: any) {
     console.log("Esto se ejecuta cuando incia el servidor");
-  }
 
-  handleConnection(client: Socket, ...args: any[]) {
-    client.emit("init", `Bienvenido tu ID es ${client.id}`);
-    console.log({ mensaje: "cliente conectado", id: client.id });
-    this.websocketService.registrarCliente(client);
     this.server.on("event", (data) => {
       return data;
     });
-    this.server.emit("userStatusChanged", { userId: client.id, isOnline: true });
-    console.log(this.websocketService.getClientes());
+  }
+
+  handleConnection(client: Socket, ...args: any[]) {
+    if (this.websocketService.isClienteRegistrado(client.id)) {
+      // El cliente ya está registrado, maneja esta situación como prefieras
+      console.log(`Cliente con ID ${client.id} ya está conectado`);
+      client.disconnect();
+    } else {
+      client.emit("init", `Bienvenido tu ID es ${client.id}`);
+      console.log({ mensaje: "cliente conectado", id: client.id });
+      this.websocketService.registrarCliente(client);
+      this.server.emit("userStatusChanged", { userId: client.id, isOnline: true });
+      console.log(this.websocketService.getClientes());
+    }
   }
 
   handleDisconnect(client: any) {
     this.websocketService.eliminarCliente(client.id);
     this.server.emit("userStatusChanged", { userId: client.id, isOnline: false });
+    console.log({ mensaje: "cliente desconectado", id: client.id });
+    
   }
 
   @SubscribeMessage("seleccionarUsuario")

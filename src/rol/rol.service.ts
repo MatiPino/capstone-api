@@ -149,6 +149,7 @@ export class RolService {
             rol: 1, // Referencia directa al campo "rol" del documento "rol"
             nombre: "$usuariosInfo.nombre",
             apellido: "$usuariosInfo.apellido",
+            imagen: "$usuariosInfo.imagen",
             correo: "$usuariosInfo.correo",
             rut: "$autenticacion.rut",
             autentificacion: {

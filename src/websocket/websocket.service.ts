@@ -15,4 +15,8 @@ export class WebsocketService {
   getClientes() {
     return Object.keys(this.clientesConectados).length;
   }
+
+  isClienteRegistrado(clientId: string): boolean {
+    return clientId in this.clientesConectados;
+  }
 }
