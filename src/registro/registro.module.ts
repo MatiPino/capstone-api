@@ -18,6 +18,10 @@ import { WebsocketService } from "src/websocket/websocket.service";
     ]),
   ],
   controllers: [RegistroController],
-  providers: [RegistroService, WsLogicaService, WebsocketGateway, WebsocketService],
+  providers: [
+    RegistroService,
+    // WsLogicaService,
+    //  WebsocketGateway, WebsocketService
+  ],
 })
 export class RegistroModule {}

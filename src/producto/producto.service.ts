@@ -16,9 +16,9 @@ export class ProductoService {
   constructor(
     @InjectModel("Producto") private readonly productoModel: Model<Producto>,
     @InjectModel("Comercio") private readonly comercioModel: Model<Comercio>,
-    private jwtService: JwtService,
-    private readonly wsLogicaService: WsLogicaService
-  ) {}
+    private jwtService: JwtService
+  ) // private readonly wsLogicaService: WsLogicaService
+  {}
 
   async findAll() {
     try {
@@ -194,7 +194,7 @@ export class ProductoService {
       }
       const updatedProducto = await this.productoModel.findByIdAndUpdate(productoID, createProductoDto, { new: true });
       if (producto.cantidad <= 5) {
-        this.wsLogicaService.actualizarStock(updatedProducto);
+        // this.wsLogicaService.actualizarStock(updatedProducto);
       }
       if (!updatedProducto) {
         return {

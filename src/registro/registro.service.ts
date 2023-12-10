@@ -14,9 +14,9 @@ export class RegistroService {
   constructor(
     @InjectModel("Registro") private readonly registroModel: Model<Registro>,
     @InjectModel("Comercio") private readonly comercioModel: Model<Comercio>,
-    @InjectModel("Producto") private readonly productoModel: Model<Producto>,
-    private wss: WsLogicaService
-  ) {}
+    @InjectModel("Producto") private readonly productoModel: Model<Producto>
+  ) // private wss: WsLogicaService
+  {}
 
   async ultimosRegistros(comercioId: string) {
     try {
@@ -325,7 +325,7 @@ export class RegistroService {
         const productoDb = await this.productoModel.findById(producto.id);
         productoDb.cantidad = productoDb.cantidad - producto.cantidad;
         productoDb.save();
-        this.wss.stockBajo(productoDb);
+        // this.wss.stockBajo(productoDb);
       }
       return {
         success: true,

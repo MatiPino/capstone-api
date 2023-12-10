@@ -5,7 +5,7 @@ import { WebsocketGateway } from "src/websocket/websocket.gateway";
 
 @Injectable()
 export class PruebaService {
-  constructor(private readonly wsg: WebsocketGateway) {}
+  // constructor(private readonly wsg: WebsocketGateway) {}
   create(createPruebaDto: CreatePruebaDto) {
     return "This action adds a new prueba";
   }

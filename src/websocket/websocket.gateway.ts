@@ -2,7 +2,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketGatew
 import { WebsocketService } from "./websocket.service";
 import { Server, Socket } from "socket.io";
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway(81, { cors: true })
 export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
@@ -34,7 +34,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     this.websocketService.eliminarCliente(client.id);
     this.server.emit("userStatusChanged", { userId: client.id, isOnline: false });
     console.log({ mensaje: "cliente desconectado", id: client.id });
-    
   }
 
   @SubscribeMessage("seleccionarUsuario")
@@ -54,6 +53,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
   @SubscribeMessage("venderProducto")
   venderProducto(client: any, payload: any): string {
+    console.log("VENDER PRODUCTYO");
     console.log({ payload });
     this.server.emit("venderProducto", payload);
     return payload;
@@ -71,10 +71,10 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     }
   }
 
-  @SubscribeMessage("stockBajo")
-  mensajeStock(payload: any) {
-    console.log(`Mensaje recibido de: ${payload.mensaje}`);
-    // Asegúrate de que el evento "mensaje" se emita solo una vez
-    this.server.emit("stockBajo", payload);
-  }
+  // @SubscribeMessage("stockBajo")
+  // mensajeStock(payload: any) {
+  //   console.log(`Mensaje recibido de: ${payload.mensaje}`);
+  //   // Asegúrate de que el evento "mensaje" se emita solo una vez
+  //   this.server.emit("stockBajo", payload);
+  // }
 }

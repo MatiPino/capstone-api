@@ -4,6 +4,9 @@ import { WebsocketGateway } from "src/websocket/websocket.gateway";
 import { WebsocketService } from "src/websocket/websocket.service";
 
 @Module({
-  providers: [WsLogicaService, WebsocketGateway, WebsocketService],
+  providers: [
+    // WsLogicaService,
+    // WebsocketGateway, WebsocketService
+  ],
 })
 export class WsLogicaModule {}

@@ -15,6 +15,10 @@ import { WebsocketService } from "src/websocket/websocket.service";
     ]),
   ],
   controllers: [ProductoController],
-  providers: [ProductoService, WsLogicaService, WebsocketGateway, WebsocketService],
+  providers: [
+    ProductoService,
+    //  WsLogicaService,
+    // WebsocketGateway, WebsocketService
+  ],
 })
 export class ProductoModule {}

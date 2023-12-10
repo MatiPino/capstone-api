@@ -15,7 +15,7 @@ import { PruebaModule } from "./prueba/prueba.module";
 import { ChatModule } from "./chat/chat.module";
 import { TicketsModule } from "./tickets/tickets.module";
 import { ConfigModule } from "@nestjs/config";
-import { WsLogicaModule } from './ws-logica/ws-logica.module';
+import { WsLogicaModule } from "./ws-logica/ws-logica.module";
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,7 +34,7 @@ import { WsLogicaModule } from './ws-logica/ws-logica.module';
     PruebaModule,
     ChatModule,
     TicketsModule,
-    WsLogicaModule,
+    // WsLogicaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
