@@ -107,16 +107,31 @@ export class UsuarioService {
   }
 
   async buscarImagen(rut: string) {
+    console.log("BUSCAR IMAGEN");
     try {
       const usuario = await this.usuarioModel
-        .findOne({})
-        .populate({ path: "autentificacion", model: "Autenticacion", match: { rut: rut }, select: "rut" })
-        .select("imagen");
-
+        .find()
+        .populate({ path: "autentificacion", model: "Autenticacion", select: "rut" })
+        .where("autentificacion.rut", rut);
+      console.log(usuario);
+      if (!usuario) {
+        return {
+          success: false,
+          estado: "No se encontro la imagen",
+          data: [],
+        };
+      }
+      if (!usuario[0].imagen) {
+        return {
+          success: false,
+          estado: "No se encontro la imagen",
+          data: [],
+        };
+      }
       return {
         success: true,
         estado: "Imagen encontrada",
-        data: usuario,
+        data: usuario[0],
       };
     } catch (error) {
       return {
@@ -153,6 +168,7 @@ export class UsuarioService {
     try {
       // const rol = await this.rolModel.findOne({ rol: createUsuarioDto.rol }).select("rol").exec();
       const updatedUsuario = await this.usuarioModel.findByIdAndUpdate(createUsuarioDto._id, { ...createUsuarioDto }, { new: true });
+      console.log("Usuario actualizado", updatedUsuario);
       if (!updatedUsuario) {
         return {
           success: false,
