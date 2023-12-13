@@ -13,12 +13,13 @@ export class ComercioService {
   ) {}
 
   async create(createComercioDto: CreateComercioDto) {
-    const { direccion, nombre, propietario, telefono } = createComercioDto;
+    const { direccion, nombre, propietario, telefono }: any = createComercioDto;
+    console.log(direccion, nombre, propietario, telefono);
     try {
       const comercio = new this.comercioModel({
         direccion,
         nombre,
-        propietario,
+        propietario: propietario.id,
         telefono,
       });
 
@@ -121,22 +122,22 @@ export class ComercioService {
       const updateComercio = await this.comercioModel.findByIdAndUpdate(id, { ...CreateComercioDto }, { new: true });
       if (!updateComercio) {
         return {
-          estado: 'No se encontro el comercio',
+          estado: "No se encontro el comercio",
           data: [],
         };
       }
       const res = {
         success: true,
-        estado: 'Comercio actualizado exitosamente',
+        estado: "Comercio actualizado exitosamente",
         data: updateComercio,
       };
       return res;
     } catch (error) {
       return {
         success: false,
-        estado: 'Error al actualizar el comercio',
+        estado: "Error al actualizar el comercio",
         data: error.message,
-      }
+      };
     }
   }
 
@@ -145,15 +146,15 @@ export class ComercioService {
       const comercio = await this.comercioModel.findByIdAndDelete(id);
       return {
         success: true,
-        estado: 'Comercio eliminado exitosamente',
+        estado: "Comercio eliminado exitosamente",
         data: comercio,
       };
     } catch (error) {
-        return {
-          success: false,
-          estado: 'Error al eliminar el comercio',
-          data: error.message,
-        }
+      return {
+        success: false,
+        estado: "Error al eliminar el comercio",
+        data: error.message,
+      };
     }
   }
 }

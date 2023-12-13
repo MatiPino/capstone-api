@@ -17,7 +17,6 @@ export class ProductoController {
   @Post()
   create(@Body() createProductoDto: CreateProductoDto, @Req() req: Request) {
     const { authorization } = req.headers;
-
     return this.productoService.create(createProductoDto);
   }
 
@@ -52,6 +51,7 @@ export class ProductoController {
 
   @Put(":id")
   updateProducto(@Body() createProductoDTO: CreateProductoDto, @Param("id") id) {
+    console.log("ACTUALIZANDO PRODUCTO");
     return this.productoService.updateProducto(id, createProductoDTO);
   }
 

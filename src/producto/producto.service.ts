@@ -16,9 +16,8 @@ export class ProductoService {
   constructor(
     @InjectModel("Producto") private readonly productoModel: Model<Producto>,
     @InjectModel("Comercio") private readonly comercioModel: Model<Comercio>,
-    private jwtService: JwtService
-  ) // private readonly wsLogicaService: WsLogicaService
-  {}
+    private jwtService: JwtService // private readonly wsLogicaService: WsLogicaService
+  ) {}
 
   async findAll() {
     try {
@@ -103,7 +102,6 @@ export class ProductoService {
     }
   }
   async findByCodigoBarra(codigoBarra: string) {
-    console.log(codigoBarra);
     try {
       const data = await this.productoModel.findOne({ codigo_barra: codigoBarra }).select("-imagenes");
       if (!data) {
@@ -119,7 +117,6 @@ export class ProductoService {
         data: data,
       };
     } catch (error) {
-      console.log("ERROR");
       return {
         success: false,
         estado: "Error al obtener el producto",
@@ -129,7 +126,7 @@ export class ProductoService {
   }
 
   async create(createProductoDTO: CreateProductoDto) {
-    console.log(createProductoDTO);
+    console.log("ESTE NO ES");
     const { codigo_barra, comercio, nombre, precio, proveedor, imagenes } = createProductoDTO;
     try {
       const producto = new this.productoModel({
@@ -183,6 +180,7 @@ export class ProductoService {
   }
 
   async updateProducto(productoID: string, createProductoDto: CreateProductoDto) {
+    console.log("CATEGORIA", createProductoDto.categoria);
     try {
       const producto = await this.productoModel.findById(productoID);
       if (!producto) {
@@ -192,10 +190,11 @@ export class ProductoService {
           data: [],
         };
       }
-      const updatedProducto = await this.productoModel.findByIdAndUpdate(productoID, createProductoDto, { new: true });
-      if (producto.cantidad <= 5) {
-        // this.wsLogicaService.actualizarStock(updatedProducto);
-      }
+      const updatedProducto = await this.productoModel.findByIdAndUpdate(
+        productoID,
+        { categoria: createProductoDto.categoria, ...createProductoDto },
+        { new: true }
+      );
       if (!updatedProducto) {
         return {
           success: false,
@@ -218,7 +217,7 @@ export class ProductoService {
     }
   }
   async actualizarStock(body: any) {
-    console.log(body);
+    console.log(this.actualizarStock);
     const { productos } = body;
     const res = {
       success: true,
@@ -229,7 +228,6 @@ export class ProductoService {
     try {
       for (const { _id, cantidad } of productos) {
         const updatedProducto = await this.productoModel.findByIdAndUpdate(_id, { cantidad: cantidad }, { new: true });
-        console.log(updatedProducto);
         if (!updatedProducto) {
           return {
             success: false,
